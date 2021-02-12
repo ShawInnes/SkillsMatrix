@@ -15,9 +15,11 @@ const onLogin = () => { console.log('onLogin') }
 const onLogout = () => { console.log('onLogout') }
 const onCreateAccount = () => { console.log('onCreateAccount') }
 
-export const App: React.FC = () => {
-  let user;
+export interface AppProps {
+  user?: {};
+}
 
+export const App: React.FC<AppProps> = ({user}) => {
   return (
     <Router>
       <Header user={user} onLogin={onLogin} onLogout={onLogout} onCreateAccount={onCreateAccount} />
