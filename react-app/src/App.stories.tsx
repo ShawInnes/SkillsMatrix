@@ -12,7 +12,7 @@ const Template: Story = (args) => <App {...args} />;
 
 export const LoggedIn = Template.bind({});
 LoggedIn.args = {
-  user: {},
+  user: '',
 };
 
 export const LoggedOut = Template.bind({});

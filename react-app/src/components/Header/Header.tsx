@@ -1,16 +1,15 @@
 import React from 'react';
-import './header.css';
+import './_Header.scss';
 import {Link as RouterLink} from "react-router-dom";
-import Button from './Button';
+import Button from '../Button/Button';
 
 export interface HeaderProps {
-    user?: {};
+    user?: string;
     onLogin: () => void;
     onLogout: () => void;
-    onCreateAccount: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({user, onLogin, onLogout, onCreateAccount}) => {
+export const Header: React.FC<HeaderProps> = ({user, onLogin, onLogout}) => {
     return (
         <header>
             <div className="wrapper">
@@ -26,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({user, onLogin, onLogout, onCreate
                             <RouterLink to="/about">
                                 <Button>About</Button>
                             </RouterLink>
-                            <RouterLink to="/user">
+                            <RouterLink to="/users">
                                 <Button>Users</Button>
                             </RouterLink>
                         </>
@@ -34,16 +33,16 @@ export const Header: React.FC<HeaderProps> = ({user, onLogin, onLogout, onCreate
                 </div>
                 <div>
                     {user ? (
-                        <Button onClick={onLogout}>
-                            Log Out
-                        </Button>
+                        <>
+                            {user}
+                            <Button onClick={onLogout}>
+                                Log Out
+                            </Button>
+                        </>
                     ) : (
                         <>
                             <Button onClick={onLogin}>
                                 Log In
-                            </Button>
-                            <Button onClick={onCreateAccount}>
-                                Sign Up
                             </Button>
                         </>
                     )}
