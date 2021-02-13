@@ -11,7 +11,7 @@ import {Header} from './components/Header/Header';
 
 import './App.scss';
 
-import {msalConfig, loginRequest} from "./auth/config";
+import {msalConfig, loginRequest} from "./auth/authConfig";
 import {MsalProvider} from "@azure/msal-react";
 import {PublicClientApplication} from "@azure/msal-browser";
 

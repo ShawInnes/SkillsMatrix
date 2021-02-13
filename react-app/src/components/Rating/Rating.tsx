@@ -1,17 +1,42 @@
-import {Button, ButtonGroup} from '@material-ui/core';
-import React from 'react';
+import {ButtonGroup, Grid} from '@material-ui/core';
+import {RatingEnum} from '../../models/ratingEnum';
+import React, {useEffect} from 'react';
+import {RatingButton} from "./RatingButton";
 
 export interface RatingProps {
+    skillId: string;
+    skillName: string;
+    ratingValue: RatingEnum;
+    onRatingValueChange: (value: RatingEnum) => void;
 }
 
-export const Rating: React.FC<RatingProps> = ({}) => {
+export const Rating: React.FC<RatingProps> = ({skillId, skillName, ratingValue, onRatingValueChange}) => {
+    const [value, setValue] = React.useState(ratingValue);
+
+    const handleRatingChange = (v: RatingEnum) => {
+        setValue(v);
+        onRatingValueChange(v);
+    };
+
     return (
-        <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
-            <Button>1</Button>
-            <Button>2</Button>
-            <Button>2.5</Button>
-            <Button>3</Button>
-            <Button>4</Button>
-        </ButtonGroup>
+        <div>
+            <Grid item xs={12}>
+                <h1>{skillName}</h1>
+            </Grid>
+            <Grid item xs={12}>
+                <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
+                    <RatingButton rating={RatingEnum.One} ratingValue={value}
+                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
+                    <RatingButton rating={RatingEnum.Two} ratingValue={value}
+                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
+                    <RatingButton rating={RatingEnum.TwoPointFive} ratingValue={value}
+                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
+                    <RatingButton rating={RatingEnum.Three} ratingValue={value}
+                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
+                    <RatingButton rating={RatingEnum.Four} ratingValue={value}
+                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
+                </ButtonGroup>
+            </Grid>
+        </div>
     );
 }
