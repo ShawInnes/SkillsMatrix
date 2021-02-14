@@ -1,15 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>aspnet-SkillsMatrix.Api-197E8774-FDB3-4CD9-BC04-C26156AF8E75</UserSecretsId>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <UserSecretsId>aspnet-SkillsMatrix.Api-197E8774-FDB3-4CD9-BC04-C26156AF8E75</UserSecretsId>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.Identity.Web" Version="1.1.0"/>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="ExRam.Gremlinq.Providers.CosmosDb" Version="8.1.2" />
+        <PackageReference Include="ExRam.Gremlinq.Providers.CosmosDb.AspNet" Version="8.1.2" />
+        <PackageReference Include="ExRam.Gremlinq.Providers.GremlinServer" Version="8.1.2" />
+        <PackageReference Include="ExRam.Gremlinq.Providers.GremlinServer.AspNet" Version="8.1.2" />
+        <PackageReference Include="Gremlin.Net" Version="3.4.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.1" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.6.0" />
+        <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
+        <PackageReference Include="Serilog.Sinks.Seq" Version="5.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SkillsMatrix.Core\SkillsMatrix.Core.csproj" />
+    </ItemGroup>
 
 </Project>

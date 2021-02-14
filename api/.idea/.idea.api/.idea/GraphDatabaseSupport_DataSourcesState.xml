@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GraphDatabaseSupport.DataSourcesState">
+    <option name="containerV1">
+      <DataSourceContainerV1>
+        <option name="dataSources">
+          <list>
+            <DataSourceV1>
+              <option name="uuid" value="2f6ccbcf-28ce-4455-ab3c-c931220c881d" />
+              <option name="name" value="gremlin-server" />
+              <option name="dataSourceType" value="OPENCYPHER_GREMLIN" />
+              <option name="configuration">
+                <map>
+                  <entry key="flavor" value="GREMLIN" />
+                  <entry key="host" value="localhost" />
+                  <entry key="password" value="" />
+                  <entry key="port" value="8182" />
+                  <entry key="serializer" value="GRAPHSON_V3D0" />
+                  <entry key="ssl" value="false" />
+                  <entry key="user" value="" />
+                </map>
+              </option>
+            </DataSourceV1>
+          </list>
+        </option>
+      </DataSourceContainerV1>
+    </option>
+  </component>
+</project>

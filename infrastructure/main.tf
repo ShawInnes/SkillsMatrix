@@ -21,6 +21,10 @@ resource "azurerm_cosmosdb_account" "skillsmatrix" {
     name = "EnableGremlin"
   }
 
+  capabilities {
+    name = "EnableServerless"
+  }
+
   consistency_policy {
     consistency_level       = "Session"
     max_interval_in_seconds = 10
@@ -37,7 +41,6 @@ resource "azurerm_cosmosdb_gremlin_database" "skillsmatrix" {
   name                = "***REMOVED***"
   resource_group_name = azurerm_cosmosdb_account.skillsmatrix.resource_group_name
   account_name        = azurerm_cosmosdb_account.skillsmatrix.name
-  throughput          = 400
 }
 
 resource "azurerm_cosmosdb_gremlin_graph" "skillsmatrix" {
@@ -45,8 +48,7 @@ resource "azurerm_cosmosdb_gremlin_graph" "skillsmatrix" {
   resource_group_name = azurerm_cosmosdb_account.skillsmatrix.resource_group_name
   account_name        = azurerm_cosmosdb_account.skillsmatrix.name
   database_name       = azurerm_cosmosdb_gremlin_database.skillsmatrix.name
-  partition_key_path  = "/Company"
-  throughput          = 400
+  partition_key_path  = "/company"
 
   index_policy {
     automatic      = true
