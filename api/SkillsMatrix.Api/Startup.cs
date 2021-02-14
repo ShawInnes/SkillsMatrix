@@ -66,8 +66,8 @@ namespace SkillsMatrix.Api
                         .AtLocalhost()));
                 // c.ConfigureEnvironment(env => env
                 //     .UseCosmosDb(builder => builder
-                //         .At(new Uri("wss://***REMOVED***.gremlin.cosmos.azure.com:443/"), "***REMOVED***", "***REMOVED***")
-                //         .AuthenticateBy("***REMOVED***")
+                //         .At(new Uri("{Instance}"), "{Database}", "{Container}")
+                //         .AuthenticateBy("{PrimaryKey}")
                 //         .ConfigureWebSocket(_ => _
                 //             .ConfigureGremlinClient(client => client
                 //                 .ObserveResultStatusAttributes((requestMessage, statusAttributes) =>
