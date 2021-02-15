@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
-using ExRam.Gremlinq.Core.GraphElements;
-using Gremlin.Net.Process.Traversal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +26,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public SkillController(IHttpContextAccessor httpContextAccessor, ILogger<UserController> logger, IGremlinQuerySource querySource)
+        public SkillController(IHttpContextAccessor httpContextAccessor, ILogger<SkillController> logger, IGremlinQuerySource querySource)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
@@ -51,11 +48,11 @@ namespace SkillsMatrix.Api.Controllers
         }
 
         /// <summary>
-        /// Get Skill User
+        /// Get Skill
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(typeof(Person), 200)]
+        [ProducesResponseType(typeof(Skill), 200)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSkill(long id)
         {
@@ -65,5 +62,20 @@ namespace SkillsMatrix.Api.Controllers
 
             return Ok(query);
         }
+
+        /// <summary>
+        /// Create Skill
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(Skill), 200)]
+        [HttpPost]
+        public async Task<IActionResult> CreateSkill(Skill skill)
+        {
+            var query = await _querySource
+                .TryAdd(skill);
+
+            return Ok(query);
+        }
+
     }
 }

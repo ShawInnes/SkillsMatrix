@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 namespace SkillsMatrix.Api.Models
 {
     public class Skill : Vertex

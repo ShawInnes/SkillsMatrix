@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using ExRam.Gremlinq.Core.GraphElements;
 
 namespace SkillsMatrix.Api.Models
 {

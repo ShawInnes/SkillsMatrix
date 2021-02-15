@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics;
-
 namespace SkillsMatrix.Api.Models
 {
     public class Person : Vertex

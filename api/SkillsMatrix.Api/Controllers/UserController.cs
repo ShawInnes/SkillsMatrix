@@ -11,13 +11,13 @@ namespace SkillsMatrix.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class PersonController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
-        public UserController(IHttpContextAccessor httpContextAccessor, ILogger<UserController> logger, IGremlinQuerySource querySource)
+        public PersonController(IHttpContextAccessor httpContextAccessor, ILogger<PersonController> logger, IGremlinQuerySource querySource)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
@@ -25,12 +25,12 @@ namespace SkillsMatrix.Api.Controllers
         }
 
         /// <summary>
-        /// Get User List
+        /// Get Person List
         /// </summary>
         /// <returns></returns>
         [ProducesResponseType(typeof(List<Person>), 200)]
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetPersonList()
         {
             var query = await _querySource
                 .V<Person>()
@@ -39,13 +39,13 @@ namespace SkillsMatrix.Api.Controllers
         }
 
         /// <summary>
-        /// Get Individual User
+        /// Get Person
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [ProducesResponseType(typeof(Person), 200)]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(long id)
+        public async Task<IActionResult> GetPerson(long id)
         {
             var query = await _querySource
                 .V<Person>(id)
@@ -55,14 +55,45 @@ namespace SkillsMatrix.Api.Controllers
         }
 
         /// <summary>
-        /// Get All Skills for this user
+        /// New Person
         /// </summary>
         /// <returns></returns>
-        [ProducesResponseType(typeof(List<PersonSkillList>), 200)]
+        [ProducesResponseType(typeof(Person), 200)]
+        [HttpPost]
+        public async Task<IActionResult> CreatePerson(Person person)
+        {
+            var query = await _querySource
+                .TryAdd(person);
+
+            return Ok(query);
+        }
+
+        /// <summary>
+        /// Add Skill to Person
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="skillId"></param>
+        /// <param name="skillLevel"></param>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(PersonSkill), 200)]
+        [HttpPost("skill")]
+        public async Task<IActionResult> AddSkill([FromQuery] long personId, [FromQuery] long skillId, [FromQuery] SkillLevel skillLevel)
+        {
+            var query = await _querySource
+                .TryAdd(personId, skillId, skillLevel);
+
+            return Ok(query);
+        }
+
+        /// <summary>
+        /// Get All Skills for a Person
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(List<PersonSkill>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 503)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         [HttpGet("skills/{id}")]
-        public async Task<IActionResult> GetUserSkills(long id)
+        public async Task<IActionResult> GetPersonSkills(long id)
         {
             var query = await _querySource
                 .V<Person>(id)
@@ -74,14 +105,14 @@ namespace SkillsMatrix.Api.Controllers
                 )
                 .ToArrayAsync();
 
-            return Ok(query.Select(p => new PersonSkillList {SkillId = p.Item3.Id, SkillName = p.Item3.Name, SkillLevel = p.Item2.Level}));
+            return Ok(query.Select(p => new PersonSkill {SkillId = p.Item3.Id, SkillName = p.Item3.Name, SkillLevel = p.Item2.Level}));
         }
 
         /// <summary>
         /// Get a list of Skills which this person is not associated with
         /// </summary>
         /// <returns></returns>
-        [ProducesResponseType(typeof(List<PersonSkillList>), 200)]
+        [ProducesResponseType(typeof(List<PersonSkill>), 200)]
         [HttpGet("missingskills/{id}")]
         public async Task<IActionResult> GetMissingSkills(long id)
         {
@@ -90,7 +121,7 @@ namespace SkillsMatrix.Api.Controllers
                 .Not(p => p.InE<HasSkill>().OutV<Person>().Where(q => q.Id == id))
                 .ToArrayAsync();
 
-            return Ok(query.Select(p => new PersonSkillList {SkillId = p.Id, SkillName = p.Name}));
+            return Ok(query.Select(p => new PersonSkill {SkillId = p.Id, SkillName = p.Name}));
         }
     }
 }

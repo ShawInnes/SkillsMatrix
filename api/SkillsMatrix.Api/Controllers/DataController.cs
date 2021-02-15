@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
-using ExRam.Gremlinq.Core.GraphElements;
-using Gremlin.Net.Process.Traversal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -29,7 +25,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public DataController(IHttpContextAccessor httpContextAccessor, ILogger<UserController> logger, IGremlinQuerySource querySource)
+        public DataController(IHttpContextAccessor httpContextAccessor, ILogger<DataController> logger, IGremlinQuerySource querySource)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;

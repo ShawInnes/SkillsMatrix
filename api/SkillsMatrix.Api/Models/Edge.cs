@@ -1,5 +1,3 @@
-using ExRam.Gremlinq.Core.GraphElements;
-
 namespace SkillsMatrix.Api.Models
 {
     public class Edge

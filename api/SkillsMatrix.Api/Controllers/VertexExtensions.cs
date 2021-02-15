@@ -1,14 +1,30 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
-using Gremlin.Net.Process.Traversal;
 using Serilog;
 using SkillsMatrix.Api.Models;
 
 namespace SkillsMatrix.Api.Controllers
 {
+    /// <summary>
+    /// Helper Methods for Vertex Manipulation
+    /// </summary>
     public static class VertexExtensions
     {
+        public static async Task<HasSkill> TryAdd(this IGremlinQuerySource querySource, long fromPersonId, long toSkillId, SkillLevel skillLevel)
+        {
+            var query = (await querySource
+                .V<Person>(fromPersonId)
+                .As((a, person) => a
+                    .V<Skill>(toSkillId)
+                    .As((b, skill) => b
+                        .Select(person, skill))
+                    .Dedup()
+                )).SingleOrDefault();
+
+            return await TryAdd<Person, Skill>(querySource, query.Item1, query.Item2, new HasSkill {Level = skillLevel});
+        }
+
         public static async Task<HasSkill> TryAdd<U, V>(this IGremlinQuerySource querySource, U fromVertex, V toVertex, HasSkill edge)
             where U : Vertex
             where V : Vertex
