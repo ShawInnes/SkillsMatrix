@@ -38,7 +38,7 @@ resource "azurerm_cosmosdb_account" "skillsmatrix" {
 }
 
 resource "azurerm_cosmosdb_gremlin_database" "skillsmatrix" {
-  name                = "***REMOVED***"
+  name                = "skillsmatrix-gremlin-db"
   resource_group_name = azurerm_cosmosdb_account.skillsmatrix.resource_group_name
   account_name        = azurerm_cosmosdb_account.skillsmatrix.name
 }

@@ -104,8 +104,13 @@ namespace SkillsMatrix.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseCors();
-            app.UseResponseCompression();
+            app.UseCors(p =>
+            {
+                p.AllowAnyMethod();
+                p.WithOrigins("http://localhost:3000");
+            });
+
+            app.UseResponseCompression();;
             app.UseResponseCaching();
 
             app.UseAuthentication();
