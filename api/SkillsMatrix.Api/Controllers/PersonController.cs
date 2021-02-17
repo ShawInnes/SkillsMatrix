@@ -5,6 +5,7 @@ using ExRam.Gremlinq.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
 
 namespace SkillsMatrix.Api.Controllers
@@ -123,5 +124,47 @@ namespace SkillsMatrix.Api.Controllers
 
             return Ok(query.Select(p => new PersonSkill {SkillId = p.Id, SkillName = p.Name}));
         }
+
+
+        /// <summary>
+        /// Add Experience to Person
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="experienceId"></param>
+        /// <param name="experienceLevel"></param>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(PersonExperience), 200)]
+        [HttpPost("experience")]
+        public async Task<IActionResult> AddExperience([FromQuery] long personId, [FromQuery] long experienceId, [FromQuery] ExperienceLevel experienceLevel)
+        {
+            var query = await _querySource
+                .TryAdd(personId, experienceId, experienceLevel);
+
+            return Ok(query);
+        }
+
+        /// <summary>
+        /// Get All Experiences for a Person
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(List<PersonExperience>), 200)]
+        [ProducesResponseType(typeof(ProblemDetails), 503)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        [HttpGet("experiences/{id}")]
+        public async Task<IActionResult> GetPersonExperiences(long id)
+        {
+            var query = await _querySource
+                .V<Person>(id)
+                .As((a, person) => a
+                    .OutE<HasExperience>()
+                    .As((b, hasExperience) => b
+                        .InV<Experience>()
+                        .As((c, experience) => c.Select(person, hasExperience, experience)))
+                )
+                .ToArrayAsync();
+
+            return Ok(query.Select(p => new PersonExperience {ExperienceId = p.Item3.Id, ExperienceName = p.Item3.Name, ExperienceLevel = p.Item2.Level}));
+        }
+
     }
 }

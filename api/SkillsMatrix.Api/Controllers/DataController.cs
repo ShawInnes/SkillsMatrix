@@ -4,6 +4,7 @@ using ExRam.Gremlinq.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
 
 namespace SkillsMatrix.Api.Controllers

@@ -4,12 +4,12 @@ using ExRam.Gremlinq.Core;
 using Serilog;
 using SkillsMatrix.Api.Models;
 
-namespace SkillsMatrix.Api.Controllers
+namespace SkillsMatrix.Api.Extensions
 {
     /// <summary>
     /// Helper Methods for Vertex Manipulation
     /// </summary>
-    public static class VertexExtensions
+    public static class SkillVertexExtensions
     {
         public static async Task<HasSkill> TryAdd(this IGremlinQuerySource querySource, long fromPersonId, long toSkillId, SkillLevel skillLevel)
         {
@@ -61,20 +61,6 @@ namespace SkillsMatrix.Api.Controllers
             }
 
             return newEdge;
-        }
-
-        public static async Task<T> TryAdd<T>(this IGremlinQuerySource querySource, T item) where T : Vertex
-        {
-            var newItem = await querySource.V<T>().Where(p => p.Name == item.Name).SingleOrDefaultAsync();
-            if (newItem == null)
-            {
-                Log.Debug("Adding new {Type} {@Item}", typeof(T).Name, item);
-                newItem = await querySource
-                    .AddV(item)
-                    .FirstAsync();
-            }
-
-            return newItem;
         }
     }
 }

@@ -11,23 +11,23 @@ using SkillsMatrix.Api.Models;
 namespace SkillsMatrix.Api.Controllers
 {
     /// <summary>
-    /// Skill Controller
+    /// Experience Controller
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class SkillController : ControllerBase
+    public class ExperienceController : ControllerBase
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
         /// <summary>
-        /// Skill Controller
+        /// Experience Controller
         /// </summary>
         /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public SkillController(IHttpContextAccessor httpContextAccessor, ILogger<SkillController> logger, IGremlinQuerySource querySource)
+        public ExperienceController(IHttpContextAccessor httpContextAccessor, ILogger<ExperienceController> logger, IGremlinQuerySource querySource)
         {
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
@@ -35,48 +35,47 @@ namespace SkillsMatrix.Api.Controllers
         }
 
         /// <summary>
-        /// Get All Skills
+        /// Get All Experiences
         /// </summary>
         /// <returns></returns>
-        [ProducesResponseType(typeof(List<Skill>), 200)]
+        [ProducesResponseType(typeof(List<Experience>), 200)]
         [HttpGet]
-        public async Task<IActionResult> Skills()
+        public async Task<IActionResult> Experiences()
         {
             var query = await _querySource
-                .V<Skill>()
+                .V<Experience>()
                 .ToArrayAsync();
             return Ok(query.ToList());
         }
 
         /// <summary>
-        /// Get Skill
+        /// Get Experience
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [ProducesResponseType(typeof(Skill), 200)]
+        [ProducesResponseType(typeof(Experience), 200)]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSkill(long id)
+        public async Task<IActionResult> GetExperience(long id)
         {
             var query = await _querySource
-                .V<Skill>(id)
+                .V<Experience>(id)
                 .FirstOrDefaultAsync();
 
             return Ok(query);
         }
 
         /// <summary>
-        /// Create Skill
+        /// Create Experience
         /// </summary>
         /// <returns></returns>
-        [ProducesResponseType(typeof(Skill), 200)]
+        [ProducesResponseType(typeof(Experience), 200)]
         [HttpPost]
-        public async Task<IActionResult> CreateSkill(Skill skill)
+        public async Task<IActionResult> CreateExperience(Experience experience)
         {
             var query = await _querySource
-                .TryAdd(skill);
+                .TryAdd(experience);
 
             return Ok(query);
         }
-
     }
 }
