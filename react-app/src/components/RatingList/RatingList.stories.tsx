@@ -2,7 +2,7 @@ import React from 'react';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import {Meta, Story} from '@storybook/react/types-6-0';
 import {RatingList, RatingListProps} from "./RatingList";
-import {RatingEnum} from "../../models/ratingEnum";
+import {SkillLevel} from "../../models/skillLevel";
 
 export default {
     title: 'Components/Rating/List',
@@ -17,22 +17,22 @@ RatingListComponent.args = {
         {
             skillId: "csharp",
             skillName: 'C#',
-            rating: RatingEnum.Four
+            skillLevel: SkillLevel.NotInterested
         },
         {
             skillId: "react",
             skillName: 'React',
-            rating: RatingEnum.Two
+            skillLevel: SkillLevel.Proficient
         },
         {
             skillId: "angular",
             skillName: 'Angular 2+',
-            rating: RatingEnum.Three
+            skillLevel: SkillLevel.WillLearn
         },
         {
             skillId: "sharepoint",
             skillName: 'SharePoint',
-            rating: RatingEnum.One
+            skillLevel: SkillLevel.Expert
         }
     ]
 };

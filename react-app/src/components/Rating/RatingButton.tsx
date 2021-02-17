@@ -1,17 +1,17 @@
 import {Button, ButtonGroup, Grid} from '@material-ui/core';
-import {RatingEnum} from '../../models/ratingEnum';
 import React from 'react';
+import {SkillLevel} from "../../models/skillLevel";
 
 export interface RatingButtonProps {
-    rating: RatingEnum;
-    ratingValue: RatingEnum;
-    onRatingValueChange: (value: RatingEnum) => void;
+    skillLevel: SkillLevel;
+    value: SkillLevel;
+    onValueChange: (value: SkillLevel) => void;
 }
 
-export const RatingButton: React.FC<RatingButtonProps> = ({rating, ratingValue, onRatingValueChange}) => {
+export const RatingButton: React.FC<RatingButtonProps> = ({skillLevel, value, onValueChange}) => {
     return (
-        rating === ratingValue ?
-            (<Button onClick={() => onRatingValueChange(rating)} color="secondary" variant="contained">{rating}</Button>) :
-            (<Button onClick={() => onRatingValueChange(rating)} color="primary" variant="contained">{rating}</Button>)
+        skillLevel === value ?
+            (<Button onClick={() => onValueChange(skillLevel)} color="secondary" variant="contained">{skillLevel}</Button>) :
+            (<Button onClick={() => onValueChange(skillLevel)} color="primary" variant="contained">{skillLevel}</Button>)
     );
 }

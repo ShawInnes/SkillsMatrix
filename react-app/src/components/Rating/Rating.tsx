@@ -1,42 +1,63 @@
 import {ButtonGroup, Grid} from '@material-ui/core';
-import {RatingEnum} from '../../models/ratingEnum';
 import React, {useEffect} from 'react';
 import {RatingButton} from "./RatingButton";
+import {makeStyles} from "@material-ui/core/styles";
+import {SkillLevel} from "../../models/skillLevel";
 
 export interface RatingProps {
     skillId: string;
     skillName: string;
-    ratingValue: RatingEnum;
-    onRatingValueChange: (value: RatingEnum) => void;
+    skillLevel: SkillLevel;
+    onValueChange: (value: SkillLevel) => void;
 }
 
-export const Rating: React.FC<RatingProps> = ({skillId, skillName, ratingValue, onRatingValueChange}) => {
-    const [value, setValue] = React.useState(ratingValue);
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    },
+    control: {
+        padding: theme.spacing(2),
+    },
+}));
 
-    const handleRatingChange = (v: RatingEnum) => {
+export const Rating: React.FC<RatingProps> = ({skillId, skillName, skillLevel, onValueChange}) => {
+    const [value, setValue] = React.useState(skillLevel);
+    const classes = useStyles();
+
+    const handleRatingChange = (v: SkillLevel) => {
         setValue(v);
-        onRatingValueChange(v);
+        onValueChange(v);
     };
 
     return (
-        <div>
+        <Grid container className={classes.root} spacing={1}>
             <Grid item xs={12}>
                 <h1>{skillName}</h1>
             </Grid>
             <Grid item xs={12}>
-                <ButtonGroup variant="contained" color="primary" aria-label="contained primary button group">
-                    <RatingButton rating={RatingEnum.One} ratingValue={value}
-                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
-                    <RatingButton rating={RatingEnum.Two} ratingValue={value}
-                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
-                    <RatingButton rating={RatingEnum.TwoPointFive} ratingValue={value}
-                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
-                    <RatingButton rating={RatingEnum.Three} ratingValue={value}
-                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
-                    <RatingButton rating={RatingEnum.Four} ratingValue={value}
-                                  onRatingValueChange={(v) => handleRatingChange(v)}/>
-                </ButtonGroup>
+                <Grid container spacing={1}>
+                    <Grid item>
+                        <RatingButton skillLevel={SkillLevel.NotInterested} value={value}
+                                      onValueChange={(v) => handleRatingChange(v)}/>
+                    </Grid>
+                    <Grid item>
+                        <RatingButton skillLevel={SkillLevel.WillLearn} value={value}
+                                      onValueChange={(v) => handleRatingChange(v)}/>
+                    </Grid>
+                    <Grid item>
+                        <RatingButton skillLevel={SkillLevel.LimitedExposure} value={value}
+                                      onValueChange={(v) => handleRatingChange(v)}/>
+                    </Grid>
+                    <Grid item>
+                        <RatingButton skillLevel={SkillLevel.Proficient} value={value}
+                                      onValueChange={(v) => handleRatingChange(v)}/>
+                    </Grid>
+                    <Grid item>
+                        <RatingButton skillLevel={SkillLevel.Expert} value={value}
+                                      onValueChange={(v) => handleRatingChange(v)}/>
+                    </Grid>
+                </Grid>
             </Grid>
-        </div>
+        </Grid>
     );
 }

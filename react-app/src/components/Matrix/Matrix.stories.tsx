@@ -12,4 +12,6 @@ export default {
 const Template: Story<MatrixProps> = (args) => <Router><Matrix {...args}/></Router>;
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+    
+};

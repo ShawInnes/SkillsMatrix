@@ -1,9 +1,9 @@
-import {RatingEnum} from "./ratingEnum";
+import {SkillLevel} from "./skillLevel";
 
 export interface SkillRating {
     skillId: string;
     skillName: string;
-    rating: RatingEnum;
+    skillLevel: SkillLevel;
     updated?: Date;
 }
 

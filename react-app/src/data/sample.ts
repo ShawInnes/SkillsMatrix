@@ -1,5 +1,5 @@
-import {RatingEnum} from "../models/ratingEnum";
 import {Person} from "../models/person";
+import {SkillLevel} from "../models/skillLevel";
 
 const skillsData: Person[] = [
     {
@@ -10,22 +10,27 @@ const skillsData: Person[] = [
             {
                 skillId: "csharp",
                 skillName: 'C#',
-                rating: RatingEnum.Four
+                skillLevel: SkillLevel.NotInterested
             },
             {
                 skillId: "react",
                 skillName: 'React',
-                rating: RatingEnum.Two
+                skillLevel: SkillLevel.WillLearn
             },
             {
                 skillId: "angular",
                 skillName: 'Angular 2+',
-                rating: RatingEnum.Three
+                skillLevel: SkillLevel.LimitedExposure
             },
             {
                 skillId: "sharepoint",
                 skillName: 'SharePoint',
-                rating: RatingEnum.One
+                skillLevel: SkillLevel.Proficient
+            },
+            {
+                skillId: "visualbasic",
+                skillName: 'VB',
+                skillLevel: SkillLevel.Expert
             }
         ]
     }

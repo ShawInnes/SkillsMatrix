@@ -2,7 +2,7 @@ import React from 'react';
 // also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import {Meta, Story} from '@storybook/react/types-6-0';
 import {RatingButton, RatingButtonProps} from './RatingButton';
-import {RatingEnum} from "../../models/ratingEnum";
+import {SkillLevel} from "../../models/skillLevel";
 
 export default {
     title: 'Components/Rating/Button',
@@ -13,12 +13,12 @@ const RatingButtonTemplate: Story<RatingButtonProps> = (args) => <RatingButton {
 
 export const Selected = RatingButtonTemplate.bind({});
 Selected.args = {
-    rating: RatingEnum.Two,
-    ratingValue: RatingEnum.Two
+    skillLevel: SkillLevel.LimitedExposure,
+    value: SkillLevel.LimitedExposure
 };
 
 export const NotSelected = RatingButtonTemplate.bind({});
 NotSelected.args = {
-    rating: RatingEnum.Two,
-    ratingValue: RatingEnum.One
+    skillLevel: SkillLevel.LimitedExposure,
+    value: SkillLevel.Expert
 };
