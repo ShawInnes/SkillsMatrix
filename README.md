@@ -1,3 +1,4 @@
-## SETUP
 
-Create an Application in Azure AD
+
+docker-compose up --build -d
+

@@ -1,6 +1,8 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
@@ -24,8 +26,18 @@ namespace SkillsMatrix.Api
 
             try
             {
+                Log.Information("Loading configuration");
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile("appsettings.local.json", optional: true)
+                    .AddJsonFile("appsettings.Development.json", optional: true)
+                    .AddEnvironmentVariables()
+                    .AddCommandLine(args)
+                    .Build();
+
                 Log.Information("Starting web host");
-                CreateHostBuilder(args).Build().Run();
+                CreateHostBuilder(args, configuration).Build().Run();
                 return 0;
             }
             catch (Exception ex)
@@ -39,9 +51,14 @@ namespace SkillsMatrix.Api
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        public static IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration) =>
             Host.CreateDefaultBuilder(args)
                 .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder
+                        .UseConfiguration(configuration)
+                        .UseStartup<Startup>();
+                });
     }
 }

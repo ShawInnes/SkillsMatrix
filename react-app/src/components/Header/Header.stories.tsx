@@ -3,18 +3,23 @@ import React from 'react';
 import {Story, Meta} from '@storybook/react/types-6-0';
 import {Header, HeaderProps} from './Header';
 import {MemoryRouter as Router} from 'react-router-dom';
+import {UserContext, UserContextModel} from '../../context/userContext';
 
 export default {
-    title: 'Components/Header',
-    component: Header,
+  title: 'Components/Header',
+  component: Header
 } as Meta;
 
-const Template: Story<HeaderProps> = (args) => <Router><Header {...args} /></Router>;
 
-export const LoggedIn = Template.bind({});
-LoggedIn.args = {
-    user: 'user@sixpivot.com.au'
+const Template: Story<HeaderProps> = (args) => (<Header {...args} />);
+
+const loggedInContext: UserContextModel = {
 };
 
+export const LoggedIn = Template.bind({});
+LoggedIn.decorators = [(Story) => (<UserContext.Provider value={loggedInContext}><Router><Story/></Router></UserContext.Provider>)]
+
+const loggedOutContext: UserContextModel = {};
+
 export const LoggedOut = Template.bind({});
-LoggedOut.args = {};
+LoggedOut.decorators = [(Story) => (<UserContext.Provider value={loggedOutContext}><Router><Story/></Router></UserContext.Provider>)]

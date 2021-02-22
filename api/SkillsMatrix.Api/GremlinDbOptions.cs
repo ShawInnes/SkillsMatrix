@@ -4,9 +4,10 @@ namespace SkillsMatrix.Api
     {
         public static string SectionName = "Gremlin";
 
-        public string Host { get; }
-        public string PrimaryKey { get; }
-        public string DatabaseName { get; }
-        public string ContainerName { get; }
+        public bool UseGremlinServer { get; set; }
+        public string Host { get; set; }
+        public string PrimaryKey { get; set; }
+        public string DatabaseName { get; set; }
+        public string ContainerName { get; set; }
     }
 }

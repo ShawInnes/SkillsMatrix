@@ -1,15 +1,14 @@
-import React, {useEffect, useState} from "react";
+import {FC, useEffect, useState} from "react";
 import axios from "axios";
 import {Container} from "@material-ui/core";
-import * as _ from "lodash";
 import {Matrix} from "../components/Matrix/Matrix";
 
-export const Users: React.FC = () => {
+export const MatrixPage: FC = () => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
         // GET request using axios inside useEffect React hook
-        axios.get('https://localhost:5001/api/matrix/dashboard')
+        axios.get('http://localhost:5000/api/matrix/dashboard')
             .then(response => {
                 setData(response.data);
             });

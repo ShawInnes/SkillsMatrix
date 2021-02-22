@@ -7,11 +7,10 @@ using ExRam.Gremlinq.Core.AspNet;
 using ExRam.Gremlinq.Providers.WebSocket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -29,14 +28,6 @@ namespace SkillsMatrix.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var azureAd = Configuration.GetSection(AzureAdOptions.SectionName);
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddMicrosoftIdentityWebApi(azureAd);
-
             services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddMvcCore()
@@ -58,13 +49,22 @@ namespace SkillsMatrix.Api
             });
             services.AddHttpContextAccessor();
 
-            services.AddOptions<GremlinDbOptions>(nameof(GremlinDbOptions));
+            services.Configure<GremlinDbOptions>(Configuration.GetSection(GremlinDbOptions.SectionName));
+
+            // Build an intermediate service provider
+            using var sp = services.BuildServiceProvider();
+            var dbOptions = sp.GetService<IOptions<GremlinDbOptions>>();
 
             services.AddGremlinq(c =>
             {
-                c.ConfigureEnvironment(env => env
-                    .UseGremlinServer(builder => builder
-                        .AtLocalhost()));
+                if (dbOptions.Value.UseGremlinServer)
+                {
+                    Log.Information("Configuring GremlinServer {Host}", dbOptions.Value.Host);
+                    c.ConfigureEnvironment(env => env
+                        .UseGremlinServer(builder => builder
+                            .At(dbOptions.Value.Host)));
+                }
+
                 // c.ConfigureEnvironment(env => env
                 //     .UseCosmosDb(builder => builder
                 //         .At(new Uri("{Instance}"), "{Database}", "{Container}")
@@ -89,7 +89,6 @@ namespace SkillsMatrix.Api
         {
             if (env.IsDevelopment())
             {
-                var azureAd = Configuration.GetSection(AzureAdOptions.SectionName);
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
@@ -110,7 +109,8 @@ namespace SkillsMatrix.Api
                 p.WithOrigins("http://localhost:3000");
             });
 
-            app.UseResponseCompression();;
+            app.UseResponseCompression();
+            ;
             app.UseResponseCaching();
 
             app.UseAuthentication();

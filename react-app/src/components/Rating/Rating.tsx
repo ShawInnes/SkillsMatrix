@@ -4,7 +4,7 @@ import {RatingButton} from "./RatingButton";
 import {makeStyles} from "@material-ui/core/styles";
 import {SkillLevel} from "../../models/skillLevel";
 
-export interface RatingProps {
+export type RatingProps = {
     skillId: string;
     skillName: string;
     skillLevel: SkillLevel;

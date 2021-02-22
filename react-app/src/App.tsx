@@ -1,60 +1,34 @@
-import React from 'react';
+import React, {FC, useState} from 'react';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
+  BrowserRouter as Router,
+  Switch,
+  Route,
 } from "react-router-dom";
-import {Home} from './pages/Home';
-import {About} from './pages/About';
-import {Users} from './pages/Users';
+import {HomePage} from './pages/HomePage';
+import {AboutPage} from './pages/AboutPage';
+import {MatrixPage} from './pages/MatrixPage';
 import {Header} from './components/Header/Header';
 
-import './App.scss';
+import {UserContextProvider} from './context/userContext';
 
-import {msalConfig, loginRequest} from "./auth/authConfig";
-import {MsalProvider} from "@azure/msal-react";
-import {PublicClientApplication} from "@azure/msal-browser";
-
-
-export interface AppProps {
-    user?: string;
-}
-
-export const App: React.FC<AppProps> = ({user}) => {
-    const msalInstance = new PublicClientApplication(msalConfig);
-
-    const accounts = msalInstance.getAllAccounts();
-    if (accounts.length > 0) {
-        user = accounts[0].username
-    }
-
-    const Login = () => {
-        msalInstance.loginPopup(loginRequest).then(p => {
-            user = p.account?.username;
-        });
-    }
-
-    const Logout = () => {
-        msalInstance.logout().then(p => console.log('onLogout', p));
-    }
-
-    return (
-        <MsalProvider instance={msalInstance}>
-            <Router>
-                <Header user={user} onLogin={Login} onLogout={Logout}/>
-                <Switch>
-                    <Route path="/about">
-                        <About/>
-                    </Route>
-                    <Route path="/users">
-                        <Users/>
-                    </Route>
-                    <Route path="/">
-                        <Home/>
-                    </Route>
-                </Switch>
-            </Router>
-        </MsalProvider>
-    );
+export const App: FC = () => {
+  return (
+    <UserContextProvider>
+      <Router>
+        <Header />
+        <Switch>
+          <Route path="/about">
+            <AboutPage/>
+          </Route>
+          <Route path="/users">
+            <MatrixPage/>
+          </Route>
+          <Route path="/">
+            <HomePage/>
+          </Route>
+        </Switch>
+      </Router>
+    </UserContextProvider>
+  );
 }
 
