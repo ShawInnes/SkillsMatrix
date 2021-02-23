@@ -1,6 +1,6 @@
-import {Button, ButtonGroup, Grid} from '@material-ui/core';
 import React from 'react';
 import {SkillLevel} from "../../models/skillLevel";
+import {Button} from "react-bootstrap";
 
 export interface RatingButtonProps {
     skillLevel: SkillLevel;
@@ -11,7 +11,7 @@ export interface RatingButtonProps {
 export const RatingButton: React.FC<RatingButtonProps> = ({skillLevel, value, onValueChange}) => {
     return (
         skillLevel === value ?
-            (<Button onClick={() => onValueChange(skillLevel)} color="secondary" variant="contained">{skillLevel}</Button>) :
-            (<Button onClick={() => onValueChange(skillLevel)} color="primary" variant="contained">{skillLevel}</Button>)
+            (<Button onClick={() => onValueChange(skillLevel)} variant="secondary">{skillLevel}</Button>) :
+            (<Button onClick={() => onValueChange(skillLevel)} variant="primary">{skillLevel}</Button>)
     );
 }

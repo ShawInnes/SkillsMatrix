@@ -9,9 +9,6 @@
 React Router
 https://reactrouter.com/web/guides/quick-start
 
-Material UI
-https://material-ui.com/components/buttons/#sizes
-
 Storybook
 ### `npm run storybook`
 

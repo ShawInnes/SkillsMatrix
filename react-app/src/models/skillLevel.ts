@@ -1,7 +1,7 @@
 export enum SkillLevel {
-    NotInterested = 1,
-    WillLearn = 2,
-    LimitedExposure = 3,
-    Proficient = 4,
-    Expert = 5
+    NotInterested = 'NotInterested',
+    WillLearn = 'WillLearn',
+    LimitedExposure = 'LimitedExposure',
+    Proficient = 'Proficient',
+    Expert = 'Expert'
 }

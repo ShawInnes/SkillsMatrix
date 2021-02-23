@@ -1,76 +1,65 @@
-import {
-    Button,
-    ButtonGroup, makeStyles,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
-} from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
 import * as _ from "lodash";
 
-import mockData from "./MatrixData.json";
 import {MatrixCell} from "../MatrixCell/MatrixCell";
+import {Table} from "react-bootstrap";
+import {SkillRating} from "../../models/skillRating";
+import styled from "styled-components";
 
 export interface MatrixProps {
+  data: SkillRating[];
 }
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-});
+const StyledTable = styled(Table)`
+  &.table thead th {
+    position: sticky;
+    top: 0px;
+    background: white;
+    box-shadow: 0 1px #dee2e6, 0 -1px #dee2e6;
+    text-align: center;
+  }
+`;
 
+export const Matrix: React.FC<MatrixProps> = ({data}) => {
+  const [people, setPeople] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
 
-export const Matrix: React.FC<MatrixProps> = ({}) => {
-    const [data, setData] = useState<any>([]);
-    const [people, setPeople] = useState<string[]>([]);
-    const [skills, setSkills] = useState<string[]>([]);
+  const getValue = (person: string, skillName: string) => {
+    const list: any[] = _.filter(data, {'person': person, 'skillName': skillName});
+    if (list.length === 1) {
+      return list[0].skillLevel;
+    }
 
-    const classes = useStyles();
+    return null;
+  };
 
-    const getValue = (person: string, skillName: string) => {
-        const list: any[]= _.filter(data, {'person': person, 'skillName': skillName});
-        if (list.length === 1) {
-            return list[0].skillLevel;
-        }
+  useEffect(() => {
+    setPeople(_.uniq(_.map(data, 'person')));
+    setSkills(_.uniq(_.map(data, 'skillName')));
+  }, [data]);
 
-        return "";
-    };
-
-    useEffect(() => {
-        setData(mockData);
-        setPeople(_.uniq(_.map(mockData, 'person')));
-        setSkills(_.uniq(_.map(mockData, 'skillName')));
-    }, []);
-
-    return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} size="small" aria-label="a dense table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Technology</TableCell>
-                        {_.orderBy(people).map((person, personIndex) => {
-                            return (<TableCell key={personIndex}>{person}</TableCell>)
-                        })}
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {_.orderBy(skills).map((skillName, skillIndex) => {
-                        return (
-                            <TableRow key={skillIndex}>
-                                <TableCell>{skillName}</TableCell>
-                                {_.orderBy(people).map((person, personIndex) => {
-                                    return (<TableCell key={personIndex}><MatrixCell skillLevel={getValue(person, skillName)}/></TableCell>)
-                                })}
-                            </TableRow>
-                        )
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+  return (
+    <StyledTable>
+      <thead>
+      <tr>
+        <th>Technology</th>
+        {_.orderBy(people).map((person, personIndex) => {
+          return (<th key={personIndex}>{person}</th>)
+        })}
+      </tr>
+      </thead>
+      <tbody>
+      {_.orderBy(skills).map((skillName, skillIndex) => {
+        return (
+          <tr key={skillIndex}>
+            <th>{skillName}</th>
+            {_.orderBy(people).map((person, personIndex) => {
+              return (<td key={personIndex} align="center"><MatrixCell skillLevel={getValue(person, skillName)}/></td>)
+            })}
+          </tr>
+        )
+      })}
+      </tbody>
+    </StyledTable>
+  );
 }

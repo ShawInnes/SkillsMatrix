@@ -1,8 +1,8 @@
 import React from "react";
 import {SkillRating} from "../../models/skillRating";
-import {List, ListItem} from "@material-ui/core";
 import {Rating} from "../Rating/Rating";
 import {SkillLevel} from "../../models/skillLevel";
+import {ListGroup, ListGroupItem} from "react-bootstrap";
 
 export interface RatingListProps {
     data: SkillRating[];
@@ -14,13 +14,13 @@ export const RatingList: React.FC<RatingListProps> = ({data, onValueChange}) => 
         return (<>No Data</>);
 
     return (
-        <List aria-label="main mailbox folders">
+        <ListGroup aria-label="main mailbox folders">
             {data.map(function (item) {
-                return (<ListItem key={item.skillId}>
+                return (<ListGroupItem key={item.skillId}>
                     <Rating skillId={item.skillId} skillName={item.skillName} skillLevel={item.skillLevel}
                             onValueChange={(newValue) => onValueChange(item.skillId, newValue)}/>
-                </ListItem>)
+                </ListGroupItem>)
             })}
-        </List>
+        </ListGroup>
     );
 }

@@ -1,25 +1,18 @@
-import {FC, useEffect, useState} from "react";
-import axios from "axios";
-import {Container} from "@material-ui/core";
+import {FC} from "react";
 import {Matrix} from "../components/Matrix/Matrix";
+import {useSkillRatingsQuery} from "../queries/skillRatings";
 
 export const MatrixPage: FC = () => {
-    const [data, setData] = useState([]);
+  const {data, isLoading} = useSkillRatingsQuery();
 
-    useEffect(() => {
-        // GET request using axios inside useEffect React hook
-        axios.get('http://localhost:5000/api/matrix/dashboard')
-            .then(response => {
-                setData(response.data);
-            });
-    }, []);
-
-    return (
-        <Container>
-            <h2>Skills Matrix</h2>
-            <Matrix/>
-        </Container>
-    )
+  return (
+    <>
+      <h2>Skills Matrix</h2>
+      {data && (
+        <Matrix data={data}/>
+      )}
+    </>
+  )
 };
  
 

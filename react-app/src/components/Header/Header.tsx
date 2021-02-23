@@ -1,56 +1,73 @@
-import React, {FC, useContext, useEffect} from 'react';
-import {AppBar, Box, IconButton, Toolbar, Typography} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import React, {FC, useContext, useState} from 'react';
 import {UserContext, UserContextModel} from "../../context/userContext";
-import Button from "../Button/Button";
+import {useHistory} from 'react-router-dom';
+import {Button, Form, FormControl, Nav, Navbar, NavDropdown} from "react-bootstrap";
+import {LinkContainer} from "react-router-bootstrap";
 
 export type HeaderProps = {}
 
 export const Header: FC<HeaderProps> = () => {
   const {setUser, user} = useContext<UserContextModel>(UserContext);
+  const history = useHistory();
 
   const handleLogin = () => {
     if (setUser) {
+      // TODO: replace with actual login functionality
       setUser({
         id: '1',
         username: 'username',
         email: 'user@here.com'
       });
+
+      history.push('/matrix');
     }
   };
 
   const handleLogout = () => {
     if (setUser) {
+      // TODO: replace with actual logout functionality
       setUser();
+
+      history.push('/');
     }
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu">
-          <MenuIcon/>
-        </IconButton>
-        <Typography style={{flex: 1}}>
-          Skills Matrix
-        </Typography>
+    <Navbar bg="light">
+      <Navbar.Brand>Skills Matrix</Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav"/>
+      <Navbar.Collapse id="basic-navbar-nav">
+        <Nav className="mr-auto" activeKey={window.location.pathname}>
+          <LinkContainer to="/">
+            <Nav.Link>Home</Nav.Link>
+          </LinkContainer>
+          {user && (
+            <>
+              <LinkContainer to="/matrix">
+                <Nav.Link>Matrix</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/person">
+                <Nav.Link>Person</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/skill">
+                <Nav.Link>Skill</Nav.Link>
+              </LinkContainer>
+              <LinkContainer to="/experience">
+                <Nav.Link>Experience</Nav.Link>
+              </LinkContainer>
+            </>)}
+        </Nav>
         {user ? (
           <>
-            <Typography variant="subtitle1">
-              {user.username}
-            </Typography>
-            <Button onClick={handleLogout}>
-              Log Out
-            </Button>
+            <span className={"mx-2"}>{user.username}</span>
+            <Button size="sm" onClick={handleLogout}>Log Out</Button>
           </>
         ) : (
           <>
-            <Button onClick={handleLogin}>
-              Log In
-            </Button>
+            <Button size="sm" onClick={handleLogin}>Log In</Button>
           </>
         )}
-      </Toolbar>
-    </AppBar>
+      </Navbar.Collapse>
+    </Navbar>
   );
 }
