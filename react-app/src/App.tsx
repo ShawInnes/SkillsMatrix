@@ -1,17 +1,19 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC, useContext, useEffect} from 'react';
 import {
   Router,
   Switch,
   Route,
+  RouteProps,
+  useHistory
 } from "react-router";
 import {createBrowserHistory} from "history";
-import {UserContextProvider} from 'infrastructure/context';
+import {UserContext, UserContextModel, UserContextProvider} from 'infrastructure/context';
 import {QueryClientProvider} from "react-query";
 import {ReactQueryDevtools} from "react-query/devtools";
 import queryClient from "queries/queryClient";
 import {lightTheme} from "./themes";
 import {ThemeProvider} from "styled-components";
-import {Header} from "./components";
+import {Header, LoadingTableProps} from "./components";
 import {
   ExperienceListPage,
   ExperiencePage,
@@ -22,51 +24,94 @@ import {
   SkillListPage,
   SkillPage
 } from "./pages";
+import {Redirect} from 'react-router-dom';
+import {useMsal} from "@azure/msal-react";
+import {TokenClaims} from "./infrastructure/auth/b2cAuth";
+import {PrivateRoute} from "./infrastructure/auth/PrivateRoute";
+import {ProfilePage} from "./pages/person/ProfilePage";
 
-const history = createBrowserHistory();
+const browserHistory = createBrowserHistory();
 
 export const App: FC = () => {
   const [theme, setTheme] = React.useState(lightTheme);
+  const {setUser, user} = useContext<UserContextModel>(UserContext);
+  const {instance: msalInstance} = useMsal();
+
   useEffect(() => setTheme(lightTheme), []);
 
+  // Log in with locally cached token
+  useEffect(() => {
+    const accounts = msalInstance.getAllAccounts();
+    const account = accounts[0];
+    if (setUser && account) {
+      const tokenClaims: TokenClaims = account.idTokenClaims as TokenClaims;
+
+      if (setUser) {
+        setUser({
+          id: tokenClaims.oid,
+          username: tokenClaims.name,
+          email: tokenClaims.preferred_username
+        });
+      }
+    }
+  }, [setUser]);
+
+  // Log in with new response token
+  const handleLogin = async () => {
+    const authResult = await msalInstance.loginPopup({scopes: []});
+
+    if (setUser && authResult && authResult.account && authResult.account.idTokenClaims) {
+      const tokenClaims: TokenClaims = authResult.account.idTokenClaims as TokenClaims;
+
+      setUser({
+        id: tokenClaims.oid,
+        username: tokenClaims.name,
+        email: tokenClaims.preferred_username
+      });
+    }
+  }
+
+  const handleLogout = async () => {
+    const authResult = await msalInstance.logout({});
+  };
+
   return (
-    <UserContextProvider>
-      {theme && (
-        <ThemeProvider theme={theme}>
-          <QueryClientProvider client={queryClient}>
-            <Router history={history}>
-              <Header/>
-              <Switch>
-                <Route exact path="/">
-                  <HomePage/>
-                </Route>
-                <Route exact path="/matrix">
-                  <MatrixPage/>
-                </Route>
-                <Route exact path="/person">
-                  <PersonListPage/>
-                </Route>
-                <Route path="/person/:id">
-                  <PersonPage/>
-                </Route>
-                <Route exact path="/skill">
-                  <SkillListPage/>
-                </Route>
-                <Route path="/skill/:id">
-                  <SkillPage/>
-                </Route>
-                <Route exact path="/experience">
-                  <ExperienceListPage/>
-                </Route>
-                <Route path="/experience/:id">
-                  <ExperiencePage/>
-                </Route>
-              </Switch>
-            </Router>
-            <ReactQueryDevtools initialIsOpen={false}/>
-          </QueryClientProvider>
-        </ThemeProvider>
-      )}
-    </UserContextProvider>
+    <ThemeProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <Router history={browserHistory}>
+          <Header user={user} onLogin={handleLogin} onLogout={handleLogout}/>
+          <Switch>
+            <Route exact path="/">
+              <HomePage/>
+            </Route>
+            <PrivateRoute exact path="/matrix">
+              <MatrixPage/>
+            </PrivateRoute>
+            <PrivateRoute exact path="/person">
+              <PersonListPage/>
+            </PrivateRoute>
+            <PrivateRoute path="/person/:id">
+              <PersonPage/>
+            </PrivateRoute>
+            <PrivateRoute exact path="/skill">
+              <SkillListPage/>
+            </PrivateRoute>
+            <PrivateRoute path="/skill/:id">
+              <SkillPage/>
+            </PrivateRoute>
+            <PrivateRoute exact path="/experience">
+              <ExperienceListPage/>
+            </PrivateRoute>
+            <PrivateRoute path="/experience/:id">
+              <ExperiencePage/>
+            </PrivateRoute>
+            <PrivateRoute exact path="/profile">
+              <ProfilePage/>
+            </PrivateRoute>
+          </Switch>
+        </Router>
+        <ReactQueryDevtools initialIsOpen={false}/>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

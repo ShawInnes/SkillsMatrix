@@ -1,43 +1,15 @@
-import React, {FC, useContext, useState} from 'react';
-import {UserContext, UserContextModel} from "infrastructure/context";
-import {useHistory} from 'react-router-dom';
+import React, {FC} from 'react';
 import {Button, Nav, Navbar} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
-import {msalInstance} from "infrastructure/auth/b2cAuth";
-import {PopupRequest} from "@azure/msal-browser";
+import {UserModel} from "infrastructure/context";
 
-export type HeaderProps = {}
+export type HeaderProps = {
+  user?: UserModel,
+  onLogin: () => void;
+  onLogout: () => void;
+}
 
-export const Header: FC<HeaderProps> = () => {
-  const {setUser, user} = useContext<UserContextModel>(UserContext);
-  const history = useHistory();
-
-  const handleLogin = async () => {
-    const loginRequest: PopupRequest = {scopes: []};
-    const loginResult = await msalInstance.loginPopup(loginRequest);
-    console.log('loginResult', loginResult);
-
-    if (setUser) {
-      // TODO: replace with actual login functionality
-      setUser({
-        id: '1',
-        username: 'username',
-        email: 'user@here.com'
-      });
-
-      history.push('/matrix');
-    }
-  };
-
-  const handleLogout = () => {
-    if (setUser) {
-      // TODO: replace with actual logout functionality
-      setUser();
-
-      history.push('/');
-    }
-  };
-
+export const Header: FC<HeaderProps> = ({user, onLogin, onLogout}) => {
   return (
     <Navbar bg="light">
       <Navbar.Brand>Skills Matrix</Navbar.Brand>
@@ -65,12 +37,12 @@ export const Header: FC<HeaderProps> = () => {
         </Nav>
         {user ? (
           <>
-            <span className={"mx-2"}>{user.username}</span>
-            <Button size="sm" onClick={handleLogout}>Log Out</Button>
+            <Nav className={"mx-2"}><LinkContainer to={`/profile`}><Nav.Link>{user.username}</Nav.Link></LinkContainer></Nav>
+            <Button size="sm" onClick={onLogout}>Log Out</Button>
           </>
         ) : (
           <>
-            <Button size="sm" onClick={handleLogin}>Log In</Button>
+            <Button size="sm" onClick={onLogin}>Log In</Button>
           </>
         )}
       </Navbar.Collapse>

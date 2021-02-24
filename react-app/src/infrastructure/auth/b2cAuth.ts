@@ -1,5 +1,4 @@
-import * as msal from "@azure/msal-browser";
-import {Configuration} from "@azure/msal-browser";
+import {Configuration, PublicClientApplication} from "@azure/msal-browser";
 
 const msalConfig: Configuration = {
   auth: {
@@ -8,4 +7,11 @@ const msalConfig: Configuration = {
   }
 };
 
-export const msalInstance = new msal.PublicClientApplication(msalConfig);
+export type TokenClaims = {
+  oid: string;
+  name: string;
+  preferred_username: string;
+}
+
+export const msalInstance = new PublicClientApplication(msalConfig);
+

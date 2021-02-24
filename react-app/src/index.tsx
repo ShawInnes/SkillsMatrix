@@ -3,10 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import {App} from './App';
 import reportWebVitals from './reportWebVitals';
+import {MsalProvider} from "@azure/msal-react";
+import {msalInstance} from "./infrastructure/auth/b2cAuth";
+import {UserContextProvider} from "./infrastructure/context";
 
 ReactDOM.render(
   <React.StrictMode>
+    <MsalProvider instance={msalInstance}>
+      <UserContextProvider>
     <App/>
+      </UserContextProvider>
+    </MsalProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
