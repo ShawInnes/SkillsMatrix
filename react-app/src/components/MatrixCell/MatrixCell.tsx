@@ -1,6 +1,7 @@
 import React from 'react';
 import {SkillLevel} from "models";
 import {StyledBadge} from "./StyledBadge";
+import {Badge} from "react-bootstrap";
 
 export interface MatrixCellProps {
   skillLevel: SkillLevel;
@@ -30,6 +31,6 @@ export const MatrixCell: React.FC<MatrixCellProps> = ({skillLevel}) => {
   }
 
   return (
-    <StyledBadge className={`badge badge-pill ${skillLevel}`}>{skillLabel}</StyledBadge>
+    <Badge className={`badge badge-pill badge-primary ${skillLevel}`}>{skillLabel}</Badge>
   );
 }
