@@ -1,4 +1,4 @@
-import React, {createContext, Dispatch, FC, SetStateAction, useState} from "react";
+import React, {createContext, FC, useState} from "react";
 
 export type UserModel = {
   id: string;

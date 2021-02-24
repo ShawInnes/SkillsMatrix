@@ -2,9 +2,8 @@ import React from "react";
 import {FC} from "react";
 import {Container} from "react-bootstrap";
 import {Link, useParams} from "react-router-dom";
-import {LoadingTable} from "../components/LoadingTable/LoadingTable";
-import {usePeopleQuery, usePersonQuery} from "../queries/people";
-import {useSkillQuery} from "../queries/skills";
+import {LoadingTable} from "components/LoadingTable/LoadingTable";
+import {useSkillQuery} from "queries";
 
 type RouteParams = {
   id: string

@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useQuery} from "react-query";
-import {Skill} from "../models/skill";
+import {Skill} from "models";
 
 const getSkills = async () => {
   const {data} = await axios.get<Array<Skill>>(`${process.env.REACT_APP_API_URL}/api/skill`);

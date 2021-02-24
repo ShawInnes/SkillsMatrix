@@ -1,10 +1,9 @@
 import React from "react";
 import {FC} from "react";
 import {Container} from "react-bootstrap";
-import {useSkillsQuery} from "../queries/skills";
-import {LoadingTable} from "../components/LoadingTable/LoadingTable";
+import {LoadingTable} from "components/LoadingTable/LoadingTable";
 import {Link} from "react-router-dom";
-import {useExperiencesQuery} from "../queries/experience";
+import {useExperiencesQuery} from "queries";
 
 export const ExperienceListPage: FC = () => {
   const {data, isLoading} = useExperiencesQuery();

@@ -105,8 +105,9 @@ namespace SkillsMatrix.Api
             app.UseRouting();
             app.UseCors(p =>
             {
+                p.AllowAnyHeader();
                 p.AllowAnyMethod();
-                p.WithOrigins("http://localhost:3000");
+                p.AllowAnyOrigin();
             });
 
             app.UseResponseCompression();

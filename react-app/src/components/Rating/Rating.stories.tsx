@@ -1,7 +1,7 @@
 import React from 'react';
 import {Meta, Story} from '@storybook/react';
 import {Rating, RatingProps} from './Rating';
-import {SkillLevel} from "../../models/skillLevel";
+import {SkillLevel} from "models";
 
 export default {
     title: 'Components/Rating',

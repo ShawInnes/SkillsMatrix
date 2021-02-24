@@ -1,16 +1,16 @@
 import React from "react";
 import {FC} from "react";
 import {Container} from "react-bootstrap";
-import {useSkillsQuery} from "../queries/skills";
-import {LoadingTable} from "../components/LoadingTable/LoadingTable";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import {LoadingTable} from "components/LoadingTable/LoadingTable";
+import {usePeopleQuery} from "queries";
 
-export const SkillListPage: FC = () => {
-  const {data, isLoading} = useSkillsQuery();
+export const PersonListPage: FC = () => {
+  const {data, isLoading} = usePeopleQuery();
 
   return (
     <Container>
-      <h2>Skills</h2>
+      <h2>People</h2>
       <LoadingTable isLoading={isLoading}>
         <thead>
 
@@ -19,7 +19,7 @@ export const SkillListPage: FC = () => {
         {data && data.map((item, index) => (
           <tr key={index}>
             <td>
-              <Link to={`/skill/${item.id}`}>{item.name}</Link>
+              <Link to={`/person/${item.id}`}>{item.name}</Link>
             </td>
           </tr>
         ))}
@@ -28,5 +28,4 @@ export const SkillListPage: FC = () => {
     </Container>
   );
 }
-
 

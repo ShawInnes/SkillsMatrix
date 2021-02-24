@@ -1,7 +1,6 @@
 import axios from "axios";
 import {useQuery} from "react-query";
-import {Person} from "../models/person";
-import {SkillRating} from "../models/skillRating";
+import {Person, SkillRating} from "models";
 
 const getPeople = async () => {
   const {data} = await axios.get<Array<Person>>(`${process.env.REACT_APP_API_URL}/api/person`);

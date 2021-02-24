@@ -1,8 +1,10 @@
 import React, {FC, useContext, useState} from 'react';
-import {UserContext, UserContextModel} from "../../context/userContext";
+import {UserContext, UserContextModel} from "infrastructure/context";
 import {useHistory} from 'react-router-dom';
-import {Button, Form, FormControl, Nav, Navbar, NavDropdown} from "react-bootstrap";
+import {Button, Nav, Navbar} from "react-bootstrap";
 import {LinkContainer} from "react-router-bootstrap";
+import {msalInstance} from "infrastructure/auth/b2cAuth";
+import {PopupRequest} from "@azure/msal-browser";
 
 export type HeaderProps = {}
 
@@ -10,7 +12,11 @@ export const Header: FC<HeaderProps> = () => {
   const {setUser, user} = useContext<UserContextModel>(UserContext);
   const history = useHistory();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    const loginRequest: PopupRequest = {scopes: []};
+    const loginResult = await msalInstance.loginPopup(loginRequest);
+    console.log('loginResult', loginResult);
+
     if (setUser) {
       // TODO: replace with actual login functionality
       setUser({

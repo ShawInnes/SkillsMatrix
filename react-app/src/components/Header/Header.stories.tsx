@@ -1,9 +1,8 @@
 import React from 'react';
-// also exported from '@storybook/react' if you can deal with breaking changes in 6.1
 import {Story, Meta} from '@storybook/react/types-6-0';
 import {Header, HeaderProps} from './Header';
 import {MemoryRouter as Router} from 'react-router-dom';
-import {UserContext, UserContextModel} from '../../context/userContext';
+import {UserContext, UserContextModel} from 'infrastructure/context';
 
 export default {
   title: 'Components/Header',

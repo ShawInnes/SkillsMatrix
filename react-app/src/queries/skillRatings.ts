@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useQuery} from "react-query";
-import {SkillRating} from "../models/skillRating";
+import {SkillRating} from "models";
 
 const getSkillRatings = async () => {
   const {data} = await axios.get<Array<SkillRating>>(`${process.env.REACT_APP_API_URL}/api/matrix/dashboard`);

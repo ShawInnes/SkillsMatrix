@@ -1,5 +1,5 @@
 import React from 'react';
-import {SkillLevel} from "../../models/skillLevel";
+import {SkillLevel} from "models";
 import {StyledBadge} from "./StyledBadge";
 
 export interface MatrixCellProps {

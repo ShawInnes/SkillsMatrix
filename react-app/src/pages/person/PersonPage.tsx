@@ -1,9 +1,9 @@
 import React from "react";
 import {FC} from "react";
 import {Container} from "react-bootstrap";
-import {Link, useParams} from "react-router-dom";
-import {LoadingTable} from "../components/LoadingTable/LoadingTable";
-import {usePeopleQuery, usePersonMissingSkillsQuery, usePersonQuery} from "../queries/people";
+import {useParams} from "react-router-dom";
+import {LoadingTable} from "components/LoadingTable/LoadingTable";
+import {usePersonMissingSkillsQuery, usePersonQuery} from "queries";
 
 type RouteParams = {
   id: string
@@ -29,7 +29,7 @@ export const PersonPage: FC = () => {
         )}
         {missingSkills &&
         (<tr>
-          <td colSpan={2}><h6>Missing Skills</h6></td>
+          <td colSpan={2}><h6>Unmapped Skills</h6></td>
         </tr>)
         }
         {missingSkills && missingSkills.map((item, index) => (

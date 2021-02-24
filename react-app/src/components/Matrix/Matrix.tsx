@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import * as _ from "lodash";
-
-import {MatrixCell} from "../MatrixCell/MatrixCell";
 import {Table} from "react-bootstrap";
-import {SkillRating} from "../../models/skillRating";
 import styled from "styled-components";
+import {MatrixCell} from "components/MatrixCell/MatrixCell";
+import {SkillRating} from "models";
 
 export interface MatrixProps {
   data: SkillRating[];

@@ -1,6 +1,6 @@
 import React from 'react';
 import {RatingButton} from "./RatingButton";
-import {SkillLevel} from "../../models/skillLevel";
+import {SkillLevel} from "models";
 import {Container} from "react-bootstrap";
 
 export type RatingProps = {

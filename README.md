@@ -9,6 +9,7 @@
 - Formik
 - Axios
 - Storybook
+- MSAL React
 
 # Getting Started
 
@@ -61,3 +62,11 @@ yarn start
 cd react-app
 yarn run storybook
 ```
+
+
+# Infrastructure
+
+- create b2c tenant
+- create b2c app registration
+- create signin user flow, add display name and email address
+- create a SPA application with redirect urls

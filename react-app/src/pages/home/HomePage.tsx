@@ -7,8 +7,10 @@ export const HomePage: FC = () => {
   return (
     <Container>
       <h2>Home</h2>
+      <p></p>
     </Container>
   );
 }
+
 
 

@@ -4,22 +4,24 @@ import {
   Switch,
   Route,
 } from "react-router";
-import {Header} from './components/Header/Header';
 import {createBrowserHistory} from "history";
-import {UserContextProvider} from './context/userContext';
-import {HomePage} from "./pages/HomePage";
-import {MatrixPage} from "./pages/MatrixPage";
+import {UserContextProvider} from 'infrastructure/context';
 import {QueryClientProvider} from "react-query";
 import {ReactQueryDevtools} from "react-query/devtools";
-import queryClient from "./queries/queryClient";
-import {lightTheme} from "./themes/theme";
+import queryClient from "queries/queryClient";
+import {lightTheme} from "./themes";
 import {ThemeProvider} from "styled-components";
-import {PersonListPage} from "./pages/PersonListPage";
-import {SkillListPage} from "./pages/SkillListPage";
-import {ExperienceListPage} from "./pages/ExperienceListPage";
-import {PersonPage} from "./pages/PersonPage";
-import {SkillPage} from "./pages/SkillPage";
-import {ExperiencePage} from "./pages/ExperiencePage";
+import {Header} from "./components";
+import {
+  ExperienceListPage,
+  ExperiencePage,
+  HomePage,
+  MatrixPage,
+  PersonListPage,
+  PersonPage,
+  SkillListPage,
+  SkillPage
+} from "./pages";
 
 const history = createBrowserHistory();
 

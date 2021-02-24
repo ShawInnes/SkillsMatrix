@@ -2,8 +2,8 @@ import React from "react";
 import {FC} from "react";
 import {Container} from "react-bootstrap";
 import {Link, useParams} from "react-router-dom";
-import {LoadingTable} from "../components/LoadingTable/LoadingTable";
-import {useExperienceQuery} from "../queries/experience";
+import {LoadingTable} from "components/LoadingTable/LoadingTable";
+import {useExperienceQuery} from "queries";
 
 type RouteParams = {
   id: string

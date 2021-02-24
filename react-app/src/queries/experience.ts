@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useQuery} from "react-query";
-import {Experience} from "../models/experience";
+import {Experience} from "models";
 
 const getExperiences = async () => {
   const {data} = await axios.get<Array<Experience>>(`${process.env.REACT_APP_API_URL}/api/experience`);

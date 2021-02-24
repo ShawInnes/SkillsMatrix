@@ -1,6 +1,6 @@
 import {FC} from "react";
-import {Matrix} from "../components/Matrix/Matrix";
-import {useSkillRatingsQuery} from "../queries/skillRatings";
+import {Matrix} from "components/Matrix/Matrix";
+import {useSkillRatingsQuery} from "queries";
 
 export const MatrixPage: FC = () => {
   const {data, isLoading} = useSkillRatingsQuery();

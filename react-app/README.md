@@ -1,22 +1,5 @@
 # Getting Started with Create React App
 
-## Questions/TODO
-
-- how to make the header refresh/rebind after login
-- how to push state up to parent controls
-
-
-React Router
-https://reactrouter.com/web/guides/quick-start
-
-Storybook
-### `npm run storybook`
-
-
-
-
-
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
