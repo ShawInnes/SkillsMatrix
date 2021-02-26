@@ -1,9 +1,9 @@
 import React, {createContext, FC, useState} from "react";
 
 export type UserModel = {
-  id: string;
-  username: string;
-  email: string,
+  id?: string;
+  name?: string;
+  email?: string,
 }
 
 export type UserContextModel = {

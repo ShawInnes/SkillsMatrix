@@ -24,58 +24,49 @@ import {
   SkillListPage,
   SkillPage
 } from "./pages";
-import {useMsal} from "@azure/msal-react";
-import {TokenClaims} from "./infrastructure/auth/b2cAuth";
 import {PrivateRoute} from "./infrastructure/auth/PrivateRoute";
 import {ProfilePage} from "./pages/person/ProfilePage";
+import authService from "./infrastructure/auth/AuthService";
 
 const browserHistory = createBrowserHistory();
 
 export const App: FC = () => {
   const [theme, setTheme] = React.useState(lightTheme);
   const {setUser, user} = useContext<UserContextModel>(UserContext);
-  const {instance: msalInstance} = useMsal();
 
   useEffect(() => setTheme(lightTheme), []);
 
   // Log in with locally cached token
   useEffect(() => {
-    const accounts = msalInstance.getAllAccounts();
-    const account = accounts[0];
-    if (setUser && account) {
-      const tokenClaims: TokenClaims = account.idTokenClaims as TokenClaims;
-
-      msalInstance.setActiveAccount(account);
+    (async function getIdentity() {
+      const identity = await authService.getIdentity();
 
       if (setUser) {
         setUser({
-          id: tokenClaims.oid,
-          username: tokenClaims.name,
-          email: tokenClaims.preferred_username
+          id: identity.oid,
+          name: identity.name,
+          email: identity.email
         });
       }
-    }
+
+    })();
   }, [setUser]);
 
   // Log in with new response token
   const handleLogin = async () => {
-    const authResult = await msalInstance.loginPopup({scopes: ["openid", "offline_access", "api://97a9eace-9524-43ce-b326-dcbce7cb5cbc/read"]});
+    const identity = await authService.signIn();
 
-    if (setUser && authResult && authResult.account && authResult.account.idTokenClaims) {
-      const tokenClaims: TokenClaims = authResult.account.idTokenClaims as TokenClaims;
-
-      msalInstance.setActiveAccount(authResult.account);
-
+    if (setUser) {
       setUser({
-        id: tokenClaims.oid,
-        username: tokenClaims.name,
-        email: tokenClaims.preferred_username
+        id: identity.oid,
+        name: identity.name,
+        email: identity.email
       });
     }
   }
 
   const handleLogout = async () => {
-    const authResult = await msalInstance.logout({});
+    await authService.signOut();
   };
 
   return (

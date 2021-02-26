@@ -30,6 +30,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using SkillsMatrix.Api.Options;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api
 {
@@ -40,7 +41,7 @@ namespace SkillsMatrix.Api
             Configuration = configuration;
         }
 
-        public string clientId = "97a9eace-9524-43ce-b326-dcbce7cb5cbc";
+        public string clientId = "***REMOVED***";
         public string clientSecret = "Wce5~.kmj421_hTd7JUmxb.K2_gEtR9.eL";
         public string redirectUrl = "http://localhost:5000";
 
@@ -52,7 +53,7 @@ namespace SkillsMatrix.Api
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             // var configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-            //     "https://login.microsoftonline.com/51b792d5-bfd3-4dbd-82d2-f42aef2fa7ee/v2.0/.well-known/openid-configuration",
+            //     "https://login.microsoftonline.com/***REMOVED***/v2.0/.well-known/openid-configuration",
             //     new OpenIdConnectConfigurationRetriever(),
             //     new HttpDocumentRetriever());
             //
@@ -73,6 +74,7 @@ namespace SkillsMatrix.Api
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                     options.JsonSerializerOptions.IgnoreNullValues = true;
+                    // options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
                 });
 
             services.AddControllers();
@@ -88,7 +90,7 @@ namespace SkillsMatrix.Api
                 c.AddSecurityDefinition("token", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.OpenIdConnect,
-                    OpenIdConnectUrl = new Uri($"https://login.microsoftonline.com/51b792d5-bfd3-4dbd-82d2-f42aef2fa7ee/v2.0/.well-known/openid-configuration")
+                    OpenIdConnectUrl = new Uri($"https://login.microsoftonline.com/***REMOVED***/v2.0/.well-known/openid-configuration")
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -141,6 +143,8 @@ namespace SkillsMatrix.Api
             services.AddLogging();
             services.AddResponseCaching();
             services.AddResponseCompression();
+
+            services.AddTransient<IUserIdService, UserIdService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

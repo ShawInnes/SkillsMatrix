@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -15,9 +17,9 @@ namespace SkillsMatrix.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SkillController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
@@ -27,9 +29,8 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public SkillController(IHttpContextAccessor httpContextAccessor, ILogger<SkillController> logger, IGremlinQuerySource querySource)
+        public SkillController(IUserIdService userId, ILogger<SkillController> logger, IGremlinQuerySource querySource)
         {
-            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _querySource = querySource;
         }
@@ -73,7 +74,7 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreateSkill(Skill skill)
         {
             var query = await _querySource
-                .TryAdd(skill);
+                .TryAdd(skill, p=> p.Name == skill.Name);
 
             return Ok(query);
         }

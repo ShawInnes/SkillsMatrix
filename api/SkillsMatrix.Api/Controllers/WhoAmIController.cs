@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -10,22 +11,26 @@ namespace SkillsMatrix.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WhoAmIController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserIdService _userId;
 
-        public WhoAmIController(IHttpContextAccessor httpContextAccessor)
+        public WhoAmIController(IUserIdService userId)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userId = userId;
         }
 
         [ProducesResponseType(200)]
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetWhoAmI()
         {
-            var identity = _httpContextAccessor?.HttpContext?.User.Identity;
-            return await Task.FromResult(Ok(identity));
+            return await Task.FromResult(Ok(new
+            {
+                ObjectId = _userId.GetObjectId(),
+                Name  = _userId.GetName(),
+                Email = _userId.GetEmailAddress()
+            }));
         }
     }
 }

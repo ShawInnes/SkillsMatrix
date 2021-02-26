@@ -2,25 +2,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
+using SkillsMatrix.Api.Services;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace SkillsMatrix.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
+    [Authorize]
     public class PersonController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserIdService _userId;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
-        public PersonController(IHttpContextAccessor httpContextAccessor, ILogger<PersonController> logger, IGremlinQuerySource querySource)
+        public PersonController(IUserIdService userId, ILogger<PersonController> logger, IGremlinQuerySource querySource)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userId = userId;
             _logger = logger;
             _querySource = querySource;
         }
@@ -30,7 +35,7 @@ namespace SkillsMatrix.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [ProducesResponseType(typeof(List<Person>), 200)]
-        [HttpGet]
+        [HttpGet("people")]
         public async Task<IActionResult> GetPersonList()
         {
             var query = await _querySource
@@ -42,10 +47,56 @@ namespace SkillsMatrix.Api.Controllers
         /// <summary>
         /// Get Person
         /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(Person), 200)]
+        [HttpGet("person")]
+        public async Task<IActionResult> GetPerson()
+        {
+            var objectId = _userId.GetObjectId();
+            var emailAddress = _userId.GetEmailAddress();
+            var name = _userId.GetName();
+
+            var query = await _querySource
+                .V<Person>()
+                .Where(p => p.Oid == objectId)
+                .FirstOrDefaultAsync();
+
+            if (query == null)
+            {
+                Log.Information("Adding New Person");
+                var newPerson = await _querySource
+                    .AddV<Person>(new Person
+                    {
+                        Oid = objectId,
+                        Email = emailAddress,
+                        Name = name
+                    })
+                    .FirstOrDefaultAsync();
+                return Ok(newPerson);
+            }
+
+            if (query.Email != emailAddress || query.Name != name)
+            {
+                Log.Information("Updating Existing Person");
+                query.Email = emailAddress;
+                query.Name = name;
+                var updatedPerson = await _querySource
+                    .ReplaceV(query)
+                    .FirstOrDefaultAsync();
+                return Ok(updatedPerson);
+            }
+
+            Log.Information("Returning Existing Person");
+            return Ok(query);
+        }
+
+        /// <summary>
+        /// Get Person
+        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [ProducesResponseType(typeof(Person), 200)]
-        [HttpGet("{id}")]
+        [HttpGet("person/{id}")]
         public async Task<IActionResult> GetPerson(long id)
         {
             var query = await _querySource
@@ -60,11 +111,11 @@ namespace SkillsMatrix.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [ProducesResponseType(typeof(Person), 200)]
-        [HttpPost]
+        [HttpPost("person")]
         public async Task<IActionResult> CreatePerson(Person person)
         {
             var query = await _querySource
-                .TryAdd(person);
+                .TryAdd(person, p => p.Name == person.Name);
 
             return Ok(query);
         }
@@ -77,7 +128,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="skillLevel"></param>
         /// <returns></returns>
         [ProducesResponseType(typeof(PersonSkill), 200)]
-        [HttpPost("skill")]
+        [HttpPost("person/skill")]
         public async Task<IActionResult> AddSkill([FromQuery] long personId, [FromQuery] long skillId, [FromQuery] SkillLevel skillLevel)
         {
             var query = await _querySource
@@ -93,7 +144,7 @@ namespace SkillsMatrix.Api.Controllers
         [ProducesResponseType(typeof(List<PersonSkill>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 503)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        [HttpGet("skills/{id}")]
+        [HttpGet("person/skills/{id}")]
         public async Task<IActionResult> GetPersonSkills(long id)
         {
             var query = await _querySource
@@ -114,7 +165,7 @@ namespace SkillsMatrix.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [ProducesResponseType(typeof(List<PersonSkill>), 200)]
-        [HttpGet("missingskills/{id}")]
+        [HttpGet("person/missingskills/{id}")]
         public async Task<IActionResult> GetMissingSkills(long id)
         {
             var query = await _querySource
@@ -134,7 +185,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="experienceLevel"></param>
         /// <returns></returns>
         [ProducesResponseType(typeof(PersonExperience), 200)]
-        [HttpPost("experience")]
+        [HttpPost("person/experience")]
         public async Task<IActionResult> AddExperience([FromQuery] long personId, [FromQuery] long experienceId, [FromQuery] ExperienceLevel experienceLevel)
         {
             var query = await _querySource
@@ -150,7 +201,7 @@ namespace SkillsMatrix.Api.Controllers
         [ProducesResponseType(typeof(List<PersonExperience>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 503)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        [HttpGet("experiences/{id}")]
+        [HttpGet("person/experiences/{id}")]
         public async Task<IActionResult> GetPersonExperiences(long id)
         {
             var query = await _querySource
@@ -165,6 +216,5 @@ namespace SkillsMatrix.Api.Controllers
 
             return Ok(query.Select(p => new PersonExperience {ExperienceId = p.Item3.Id, ExperienceName = p.Item3.Name, ExperienceLevel = p.Item2.Level}));
         }
-
     }
 }

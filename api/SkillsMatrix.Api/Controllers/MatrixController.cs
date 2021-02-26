@@ -2,10 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Models;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -14,9 +16,10 @@ namespace SkillsMatrix.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MatrixController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserIdService _userId;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
@@ -26,9 +29,9 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public MatrixController(IHttpContextAccessor httpContextAccessor, ILogger<MatrixController> logger, IGremlinQuerySource querySource)
+        public MatrixController(IUserIdService userId, ILogger<MatrixController> logger, IGremlinQuerySource querySource)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userId = userId;
             _logger = logger;
             _querySource = querySource;
         }

@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -15,9 +17,10 @@ namespace SkillsMatrix.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ExperienceController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserIdService _userId;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
@@ -27,9 +30,9 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public ExperienceController(IHttpContextAccessor httpContextAccessor, ILogger<ExperienceController> logger, IGremlinQuerySource querySource)
+        public ExperienceController(IUserIdService userId, ILogger<ExperienceController> logger, IGremlinQuerySource querySource)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userId = userId;
             _logger = logger;
             _querySource = querySource;
         }
@@ -73,7 +76,7 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreateExperience(Experience experience)
         {
             var query = await _querySource
-                .TryAdd(experience);
+                .TryAdd(experience, p => p.Name == experience.Name);
 
             return Ok(query);
         }

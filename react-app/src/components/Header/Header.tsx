@@ -19,7 +19,7 @@ export const Header: FC<HeaderProps> = ({user, onLogin, onLogout}) => {
           <LinkContainer to="/">
             <Nav.Link>Home</Nav.Link>
           </LinkContainer>
-          {user && (
+          {user && user.id && (
             <>
               <LinkContainer to="/matrix">
                 <Nav.Link>Matrix</Nav.Link>
@@ -35,9 +35,9 @@ export const Header: FC<HeaderProps> = ({user, onLogin, onLogout}) => {
               </LinkContainer>
             </>)}
         </Nav>
-        {user ? (
+        {user && user.id ? (
           <>
-            <Nav className={"mx-2"}><LinkContainer to={`/profile`}><Nav.Link>{user.username}</Nav.Link></LinkContainer></Nav>
+            <Nav className={"mx-2"}><LinkContainer to={`/profile`}><Nav.Link>{user.name}</Nav.Link></LinkContainer></Nav>
             <Button size="sm" onClick={onLogout}>Log Out</Button>
           </>
         ) : (

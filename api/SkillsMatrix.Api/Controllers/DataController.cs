@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -16,9 +18,10 @@ namespace SkillsMatrix.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DataController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserIdService _userId;
         private readonly IHostEnvironment _env;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
@@ -26,12 +29,11 @@ namespace SkillsMatrix.Api.Controllers
         /// <summary>
         /// Data Controller
         /// </summary>
-        /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public DataController(IHttpContextAccessor httpContextAccessor, IHostEnvironment env, ILogger<DataController> logger, IGremlinQuerySource querySource)
+        public DataController(IUserIdService userId, IHostEnvironment env, ILogger<DataController> logger, IGremlinQuerySource querySource)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userId = userId;
             _env = env;
             _logger = logger;
             _querySource = querySource;
@@ -58,7 +60,13 @@ namespace SkillsMatrix.Api.Controllers
                 }
                 else
                 {
-                    person = await _querySource.TryAdd(new Person {Name = item.Person});
+                    var newPerson = new Person
+                    {
+                        Oid = item.Person,
+                        Name = item.Person,
+                        Email = item.Person
+                    };
+                    person = await _querySource.TryAdd(newPerson, p => p.Oid == item.Person);
                     personCache.Add(item.Person, person);
                 }
 
@@ -69,7 +77,7 @@ namespace SkillsMatrix.Api.Controllers
                 }
                 else
                 {
-                    skill = await _querySource.TryAdd(new Skill {Name = item.SkillName});
+                    skill = await _querySource.TryAdd(new Skill {Name = item.SkillName}, p => p.Name == item.SkillName);
                     skillCache.Add(item.SkillName, skill);
                 }
 

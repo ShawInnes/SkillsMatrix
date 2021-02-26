@@ -3,7 +3,7 @@ import {FC} from "react";
 import {Container} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {LoadingTable} from "components/LoadingTable/LoadingTable";
-import {usePersonMissingSkillsQuery, usePersonQuery} from "queries";
+import {usePersonByIdQuery, usePersonMissingSkillsQuery} from "queries";
 
 type RouteParams = {
   id: string
@@ -11,7 +11,7 @@ type RouteParams = {
 
 export const PersonPage: FC = () => {
   const {id} = useParams<RouteParams>();
-  const {data: person, isLoading: isLoadingPerson} = usePersonQuery(id);
+  const {data: person, isLoading: isLoadingPerson} = usePersonByIdQuery(id);
   const {data: missingSkills, isLoading: isLoadingMissingSkills} = usePersonMissingSkillsQuery(id);
 
   return (
@@ -23,16 +23,15 @@ export const PersonPage: FC = () => {
         <tbody>
         {person && (
           <tr>
-            <td>{person.id}</td>
-            <td>{person.name}</td>
+            <td colSpan={2}>{person.name}</td>
           </tr>
         )}
-        {missingSkills &&
+        {missingSkills && missingSkills.length > 0 &&
         (<tr>
           <td colSpan={2}><h6>Unmapped Skills</h6></td>
         </tr>)
         }
-        {missingSkills && missingSkills.map((item, index) => (
+        {missingSkills && missingSkills.length > 0 && missingSkills.map((item, index) => (
           <tr key={index}>
             <td>{item.skillId}</td>
             <td>{item.skillName}</td>
