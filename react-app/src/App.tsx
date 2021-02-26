@@ -24,7 +24,6 @@ import {
   SkillListPage,
   SkillPage
 } from "./pages";
-import {Redirect} from 'react-router-dom';
 import {useMsal} from "@azure/msal-react";
 import {TokenClaims} from "./infrastructure/auth/b2cAuth";
 import {PrivateRoute} from "./infrastructure/auth/PrivateRoute";
@@ -46,6 +45,8 @@ export const App: FC = () => {
     if (setUser && account) {
       const tokenClaims: TokenClaims = account.idTokenClaims as TokenClaims;
 
+      msalInstance.setActiveAccount(account);
+
       if (setUser) {
         setUser({
           id: tokenClaims.oid,
@@ -58,10 +59,12 @@ export const App: FC = () => {
 
   // Log in with new response token
   const handleLogin = async () => {
-    const authResult = await msalInstance.loginPopup({scopes: []});
+    const authResult = await msalInstance.loginPopup({scopes: ["openid", "offline_access", "api://97a9eace-9524-43ce-b326-dcbce7cb5cbc/read"]});
 
     if (setUser && authResult && authResult.account && authResult.account.idTokenClaims) {
       const tokenClaims: TokenClaims = authResult.account.idTokenClaims as TokenClaims;
+
+      msalInstance.setActiveAccount(authResult.account);
 
       setUser({
         id: tokenClaims.oid,

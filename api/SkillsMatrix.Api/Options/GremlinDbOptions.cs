@@ -1,4 +1,4 @@
-namespace SkillsMatrix.Api
+namespace SkillsMatrix.Api.Options
 {
     public class GremlinDbOptions
     {
