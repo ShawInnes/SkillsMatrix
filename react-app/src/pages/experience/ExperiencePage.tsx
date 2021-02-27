@@ -1,9 +1,9 @@
 import React from "react";
 import {FC} from "react";
-import {Container} from "react-bootstrap";
+import {Container, Table} from "react-bootstrap";
 import {Link, useParams} from "react-router-dom";
-import {LoadingTable} from "components/LoadingTable/LoadingTable";
 import {useExperienceQuery} from "queries";
+import {LoadingOverlay} from "../../components";
 
 type RouteParams = {
   id: string
@@ -16,8 +16,9 @@ export const ExperiencePage: FC = () => {
   return (
     <Container>
       <h2>Experience</h2>
+      <LoadingOverlay isLoading={isLoading}/>
       {data && (
-        <LoadingTable isLoading={isLoading}>
+        <Table>
           <thead>
           </thead>
           <tbody>
@@ -26,7 +27,7 @@ export const ExperiencePage: FC = () => {
             <td>{data.name}</td>
           </tr>
           </tbody>
-        </LoadingTable>
+        </Table>
       )}
     </Container>
   );

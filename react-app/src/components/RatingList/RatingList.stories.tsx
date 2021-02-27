@@ -16,21 +16,25 @@ RatingListComponent.args = {
         {
             skillId: "csharp",
             skillName: 'C#',
+            skillCategory: 'Front-End',
             skillLevel: SkillLevel.NotInterested
         },
         {
             skillId: "react",
             skillName: 'React',
+            skillCategory: 'Front-End',
             skillLevel: SkillLevel.Proficient
         },
         {
             skillId: "angular",
             skillName: 'Angular 2+',
+            skillCategory: 'Front-End',
             skillLevel: SkillLevel.WillLearn
         },
         {
             skillId: "sharepoint",
             skillName: 'SharePoint',
+            skillCategory: 'Other',
             skillLevel: SkillLevel.Expert
         }
     ]

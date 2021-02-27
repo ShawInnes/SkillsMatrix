@@ -46,7 +46,8 @@ export class AuthService {
 
   async getProfile() {
     const axios = await getAxiosInstance();
-    return await axios.get<Person>(`${process.env.REACT_APP_API_URL}/api/person`);
+    const {data} = await axios.get<Person>(`${process.env.REACT_APP_API_URL}/api/person`);
+    return data;
   }
 
   async getIdentity() {

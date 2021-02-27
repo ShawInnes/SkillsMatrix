@@ -1,2 +1,2 @@
 export * from "./SkillListPage";
-export * from "./SkillPage";
+export * from "./SkillViewPage";

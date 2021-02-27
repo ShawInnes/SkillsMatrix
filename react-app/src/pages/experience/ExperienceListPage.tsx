@@ -1,9 +1,9 @@
 import React from "react";
 import {FC} from "react";
-import {Container} from "react-bootstrap";
-import {LoadingTable} from "components/LoadingTable/LoadingTable";
+import {Container, Table} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {useExperiencesQuery} from "queries";
+import {LoadingOverlay} from "../../components";
 
 export const ExperienceListPage: FC = () => {
   const {data, isLoading} = useExperiencesQuery();
@@ -11,7 +11,8 @@ export const ExperienceListPage: FC = () => {
   return (
     <Container>
       <h2>Experiences</h2>
-      <LoadingTable isLoading={isLoading}>
+      <LoadingOverlay isLoading={isLoading}/>
+      <Table>
         <thead>
 
         </thead>
@@ -24,7 +25,7 @@ export const ExperienceListPage: FC = () => {
           </tr>
         ))}
         </tbody>
-      </LoadingTable>
+      </Table>
     </Container>
   );
 }

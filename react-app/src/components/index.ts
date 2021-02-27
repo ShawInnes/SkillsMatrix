@@ -1,5 +1,6 @@
 export * from "./Header/Header";
-export * from "./LoadingTable/LoadingTable";
+export * from "./LoadingOverlay/LoadingOverlay";
+export * from "./LoadingContainer/LoadingContainer";
 export * from "./Matrix/Matrix";
 export * from "./MatrixCell/MatrixCell";
 export * from "./MatrixCell/StyledBadge";

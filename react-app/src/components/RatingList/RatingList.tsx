@@ -16,8 +16,12 @@ export const RatingList: React.FC<RatingListProps> = ({data, onValueChange}) => 
     <ListGroup aria-label="main mailbox folders">
       {data.map(function (item) {
         return (<ListGroupItem key={item.skillId}>
-          <Rating skillId={item.skillId} skillName={item.skillName} skillLevel={item.skillLevel}
-                  onValueChange={(newValue) => onValueChange(item.skillId, newValue)}/>
+          <Rating showLabel={true}
+                  skillId={item.skillId}
+                  skillName={item.skillName}
+                  skillCategory={item.skillCategory}
+                  skillLevel={item.skillLevel}
+                  onValueChange={onValueChange}/>
         </ListGroupItem>)
       })}
     </ListGroup>

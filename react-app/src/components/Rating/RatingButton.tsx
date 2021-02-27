@@ -11,7 +11,7 @@ export interface RatingButtonProps {
 export const RatingButton: React.FC<RatingButtonProps> = ({skillLevel, value, onValueChange}) => {
     return (
         skillLevel === value ?
-            (<Button onClick={() => onValueChange(skillLevel)} variant="secondary">{skillLevel}</Button>) :
-            (<Button onClick={() => onValueChange(skillLevel)} variant="primary">{skillLevel}</Button>)
+            (<Button onClick={() => onValueChange(skillLevel)} className="btn btn-sm btn-primary" >{skillLevel}</Button>) :
+            (<Button onClick={() => onValueChange(skillLevel)} className="btn btn-sm btn-secondary">{skillLevel}</Button>)
     );
 }

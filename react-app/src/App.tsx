@@ -3,17 +3,15 @@ import {
   Router,
   Switch,
   Route,
-  RouteProps,
-  useHistory
 } from "react-router";
 import {createBrowserHistory} from "history";
-import {UserContext, UserContextModel, UserContextProvider} from 'infrastructure/context';
+import {UserContext, UserContextModel} from 'infrastructure/context';
 import {QueryClientProvider} from "react-query";
 import {ReactQueryDevtools} from "react-query/devtools";
 import queryClient from "queries/queryClient";
 import {lightTheme} from "./themes";
 import {ThemeProvider} from "styled-components";
-import {Header, LoadingTableProps} from "./components";
+import {Header} from "./components";
 import {
   ExperienceListPage,
   ExperiencePage,
@@ -22,11 +20,12 @@ import {
   PersonListPage,
   PersonPage,
   SkillListPage,
-  SkillPage
+  SkillViewPage
 } from "./pages";
 import {PrivateRoute} from "./infrastructure/auth/PrivateRoute";
 import {ProfilePage} from "./pages/person/ProfilePage";
 import authService from "./infrastructure/auth/AuthService";
+import {SkillEditPage} from "./pages/skill/SkillEditPage";
 
 const browserHistory = createBrowserHistory();
 
@@ -40,6 +39,7 @@ export const App: FC = () => {
   useEffect(() => {
     (async function getIdentity() {
       const identity = await authService.getIdentity();
+      const profile = await authService.getProfile();
 
       if (setUser) {
         setUser({
@@ -55,6 +55,7 @@ export const App: FC = () => {
   // Log in with new response token
   const handleLogin = async () => {
     const identity = await authService.signIn();
+    const profile = await authService.getProfile();
 
     if (setUser) {
       setUser({
@@ -90,8 +91,11 @@ export const App: FC = () => {
             <PrivateRoute exact path="/skill">
               <SkillListPage/>
             </PrivateRoute>
-            <PrivateRoute path="/skill/:id">
-              <SkillPage/>
+            <PrivateRoute exact path="/skill/edit">
+              <SkillEditPage/>
+            </PrivateRoute>
+            <PrivateRoute path="/skill/edit/:id">
+              <SkillEditPage/>
             </PrivateRoute>
             <PrivateRoute exact path="/experience">
               <ExperienceListPage/>
