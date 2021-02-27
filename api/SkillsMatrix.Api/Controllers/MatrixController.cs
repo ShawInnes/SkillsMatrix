@@ -51,7 +51,7 @@ namespace SkillsMatrix.Api.Controllers
                 )
                 .ToArrayAsync();
 
-            return Ok(query.Select(p => new PersonSkill {Person = p.Item1.Name, SkillId = p.Item3.Id, SkillName = p.Item3.Name, SkillLevel = p.Item2.Level}));
+            return Ok(query.Select(p => new PersonSkill {Person = p.Item1.Name, SkillId = p.Item3.Id, SkillName = p.Item3.Name, SkillCategory = p.Item3.Category, SkillLevel = p.Item2.Level}));
         }
     }
 }

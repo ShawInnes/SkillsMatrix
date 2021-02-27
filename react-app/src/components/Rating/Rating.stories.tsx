@@ -14,5 +14,6 @@ export const RatingComponent = RatingTemplate.bind({});
 RatingComponent.args = {
     skillId: 'angular',
     skillName: 'Angular 2+',
-    skillLevel: SkillLevel.Proficient
+    skillLevel: SkillLevel.Proficient,
+    skillCategory: "Web Technologies"
 };

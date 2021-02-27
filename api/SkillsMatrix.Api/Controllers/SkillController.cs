@@ -74,10 +74,24 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreateSkill(Skill skill)
         {
             var query = await _querySource
-                .TryAdd(skill, p=> p.Name == skill.Name);
+                .TryAdd(skill, p => p.Name == skill.Name);
 
             return Ok(query);
         }
 
+        /// <summary>
+        /// Delete Skill
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(Skill), 200)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSkill(long id)
+        {
+            var query = await _querySource
+                .V<Skill>(id)
+                .Drop();
+
+            return Ok();
+        }
     }
 }

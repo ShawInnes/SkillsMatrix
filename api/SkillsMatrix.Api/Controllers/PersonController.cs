@@ -157,7 +157,7 @@ namespace SkillsMatrix.Api.Controllers
                 )
                 .ToArrayAsync();
 
-            return Ok(query.Select(p => new PersonSkill {SkillId = p.Item3.Id, SkillName = p.Item3.Name, SkillLevel = p.Item2.Level}));
+            return Ok(query.Select(p => new PersonSkill {SkillId = p.Item3.Id, SkillName = p.Item3.Name, SkillCategory = p.Item3.Category, SkillLevel = p.Item2.Level}));
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace SkillsMatrix.Api.Controllers
                 .Not(p => p.InE<HasSkill>().OutV<Person>().Where(q => q.Id == id))
                 .ToArrayAsync();
 
-            return Ok(query.Select(p => new PersonSkill {SkillId = p.Id, SkillName = p.Name}));
+            return Ok(query.Select(p => new PersonSkill {SkillId = p.Id, SkillName = p.Name, SkillCategory = p.Category}));
         }
 
 

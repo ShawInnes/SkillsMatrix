@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {RatingButton} from "./RatingButton";
 import {SkillLevel} from "models";
 import {Container} from "react-bootstrap";
+import styled from "styled-components";
 
 export type RatingProps = {
   showLabel: boolean;
@@ -27,36 +28,46 @@ export const Rating: React.FC<RatingProps> = ({
     onValueChange(id, v);
   };
 
+  useEffect(() => {
+    setValue(skillLevel);
+  }, [setValue, skillLevel]);
+
   return (
     <>
       {showLabel && (
-        <div className={"row"}>
-          <h1>{skillName} ({skillCategory})</h1>
-        </div>
+        <SkillTitle>
+          <SkillName>{skillName}</SkillName> <SkillCategory>({skillCategory})</SkillCategory>
+        </SkillTitle>
       )}
 
-      <div className={"row"}>
-        <div className={"col"}>
+      <SkillButtonGroup>
           <RatingButton skillLevel={SkillLevel.NotInterested} value={value}
                         onValueChange={(v) => handleRatingChange(skillId, v)}/>
-        </div>
-        <div className={"col"}>
           <RatingButton skillLevel={SkillLevel.WillLearn} value={value}
                         onValueChange={(v) => handleRatingChange(skillId, v)}/>
-        </div>
-        <div className={"col"}>
           <RatingButton skillLevel={SkillLevel.LimitedExposure} value={value}
                         onValueChange={(v) => handleRatingChange(skillId, v)}/>
-        </div>
-        <div className={"col"}>
           <RatingButton skillLevel={SkillLevel.Proficient} value={value}
                         onValueChange={(v) => handleRatingChange(skillId, v)}/>
-        </div>
-        <div className={"col"}>
           <RatingButton skillLevel={SkillLevel.Expert} value={value}
                         onValueChange={(v) => handleRatingChange(skillId, v)}/>
-        </div>
-      </div>
+      </SkillButtonGroup>
     </>
   );
 }
+
+const SkillTitle = styled.div`
+`;
+
+const SkillName = styled.span`
+  font-weight: bold;
+  font-size: 1.2em;
+`;
+
+const SkillCategory = styled.span`
+  font-weight: bold;
+  font-size: 0.8em;
+`;
+
+const SkillButtonGroup = styled.div`
+`;
