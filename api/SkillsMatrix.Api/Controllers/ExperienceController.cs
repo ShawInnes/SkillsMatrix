@@ -58,7 +58,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(Experience), 200)]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetExperience(long id)
+        public async Task<IActionResult> GetExperience(string id)
         {
             var query = await _querySource
                 .V<Experience>(id)
@@ -76,7 +76,7 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreateExperience(Experience experience)
         {
             var query = await _querySource
-                .TryAdd(experience, p => p.Name == experience.Name);
+                .TryAddOrUpdate(experience, p => p.Name == experience.Name);
 
             return Ok(query);
         }

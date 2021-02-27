@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,7 +43,6 @@ namespace SkillsMatrix.Api
         }
 
         public string clientId = "***REMOVED***";
-        public string clientSecret = "Wce5~.kmj421_hTd7JUmxb.K2_gEtR9.eL";
         public string redirectUrl = "http://localhost:5000";
 
         public IConfiguration Configuration { get; }
@@ -118,26 +118,33 @@ namespace SkillsMatrix.Api
 
             services.AddGremlinq(c =>
             {
-                if (dbOptions.Value.UseGremlinServer)
+                if (dbOptions.Value.UseGremlinServer && dbOptions.Value.Host.StartsWith("ws://"))
                 {
                     Log.Information("Configuring GremlinServer {Host}", dbOptions.Value.Host);
                     c.ConfigureEnvironment(env => env
                         .UseGremlinServer(builder => builder
                             .At(dbOptions.Value.Host)));
                 }
-
-                // c.ConfigureEnvironment(env => env
-                //     .UseCosmosDb(builder => builder
-                //         .At(new Uri("{Instance}"), "{Database}", "{Container}")
-                //         .AuthenticateBy("{PrimaryKey}")
-                //         .ConfigureWebSocket(_ => _
-                //             .ConfigureGremlinClient(client => client
-                //                 .ObserveResultStatusAttributes((requestMessage, statusAttributes) =>
-                //                 {
-                //                     //Uncomment to log request charges for CosmosDB.
-                //                     //if (statusAttributes.TryGetValue("x-ms-total-request-charge", out var requestCharge))
-                //                     //    env.Logger.LogInformation($"Query {requestMessage.RequestId} had a RU charge of {requestCharge}.");
-                //                 })))));
+                else
+                {
+                    Log.Information("Configuring CosmosDb {Host} {Database} {Container}", dbOptions.Value.Host, dbOptions.Value.DatabaseName, dbOptions.Value.ContainerName);
+                    c.ConfigureEnvironment(env => env
+                        .UseCosmosDb(builder => builder
+                            .At(new Uri(dbOptions.Value.Host), dbOptions.Value.DatabaseName, dbOptions.Value.ContainerName)
+                            .AuthenticateBy(dbOptions.Value.PrimaryKey)
+                            .ConfigureWebSocket(_ => _
+                                .ConfigureGremlinClient(client => client
+                                    .ObserveResultStatusAttributes((requestMessage, statusAttributes) =>
+                                    {
+                                        //Uncomment to log request charges for CosmosDB.
+                                        //if (statusAttributes.TryGetValue("x-ms-total-request-charge", out var requestCharge))
+                                        //    env.Logger.LogInformation($"Query {requestMessage.RequestId} had a RU charge of {requestCharge}.");
+                                    })
+                                )
+                            )
+                        )
+                    );
+                }
             });
 
             services.AddLogging();
@@ -153,18 +160,18 @@ namespace SkillsMatrix.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "SkillsMatrix.Api v1");
-                    c.DisplayRequestDuration();
-                    c.OAuthClientId(clientId);
-                    c.OAuthScopes("openid", "offline_access");
-                    c.OAuthClientSecret(clientSecret);
-                    c.OAuth2RedirectUrl($"{redirectUrl}/swagger/oauth2-redirect.html");
-                    c.OAuthUsePkce();
-                });
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "SkillsMatrix.Api v1");
+                c.DisplayRequestDuration();
+                c.OAuthClientId(clientId);
+                c.OAuthScopes("openid", "offline_access");
+                c.OAuth2RedirectUrl($"{redirectUrl}/swagger/oauth2-redirect.html");
+                c.OAuthUsePkce();
+            });
 
             app.UseSerilogRequestLogging();
 
@@ -175,8 +182,12 @@ namespace SkillsMatrix.Api
             {
                 p.AllowAnyHeader();
                 p.AllowAnyMethod();
-                p.WithOrigins("http://localhost:5000", "http://localhost:3000");
                 p.AllowCredentials();
+                p.WithOrigins(
+                    "http://localhost:5000",
+                    "http://localhost:3000",
+                    "https://skills-matrix-app.azurewebsites.net"
+                );
             });
 
             app.UseResponseCompression();
@@ -185,7 +196,11 @@ namespace SkillsMatrix.Api
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapFallbackToFile("/index.html");
+            });
         }
     }
 }

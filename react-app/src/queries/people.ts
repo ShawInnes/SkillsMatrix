@@ -22,7 +22,6 @@ export const usePersonQuery = () => useQuery(['person'], () => getPerson());
 const getPersonById = async (id: string) => {
   const axios = await getAxiosInstance();
   const {data} = await axios.get<Person>(`${process.env.REACT_APP_API_URL}/api/person/${id}`);
-  console.log('data', data);
   return data;
 };
 

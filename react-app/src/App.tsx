@@ -10,22 +10,22 @@ import {QueryClientProvider} from "react-query";
 import {ReactQueryDevtools} from "react-query/devtools";
 import queryClient from "queries/queryClient";
 import {lightTheme} from "./themes";
-import {ThemeProvider} from "styled-components";
+import styled, {ThemeProvider} from "styled-components";
 import {Header} from "./components";
 import {
   ExperienceListPage,
   ExperiencePage,
   HomePage,
   MatrixPage,
+  NotFoundPage,
   PersonListPage,
-  PersonPage,
+  PersonEditPage,
   SkillListPage,
-  SkillViewPage
-} from "./pages";
+} from "./components/pages";
 import {PrivateRoute} from "./infrastructure/auth/PrivateRoute";
-import {ProfilePage} from "./pages/person/ProfilePage";
+import {ProfilePage} from "./components/pages/person/ProfilePage";
 import authService from "./infrastructure/auth/AuthService";
-import {SkillEditPage} from "./pages/skill/SkillEditPage";
+import {SkillEditPage} from "./components/pages/skill/SkillEditPage";
 
 const browserHistory = createBrowserHistory();
 
@@ -74,42 +74,51 @@ export const App: FC = () => {
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <Router history={browserHistory}>
-          <Header user={user} onLogin={handleLogin} onLogout={handleLogout}/>
-          <Switch>
-            <Route exact path="/">
-              <HomePage/>
-            </Route>
-            <PrivateRoute exact path="/matrix">
-              <MatrixPage/>
-            </PrivateRoute>
-            <PrivateRoute exact path="/person">
-              <PersonListPage/>
-            </PrivateRoute>
-            <PrivateRoute path="/person/:id">
-              <PersonPage/>
-            </PrivateRoute>
-            <PrivateRoute exact path="/skill">
-              <SkillListPage/>
-            </PrivateRoute>
-            <PrivateRoute exact path="/skill/edit">
-              <SkillEditPage/>
-            </PrivateRoute>
-            <PrivateRoute path="/skill/edit/:id">
-              <SkillEditPage/>
-            </PrivateRoute>
-            <PrivateRoute exact path="/experience">
-              <ExperienceListPage/>
-            </PrivateRoute>
-            <PrivateRoute path="/experience/:id">
-              <ExperiencePage/>
-            </PrivateRoute>
-            <PrivateRoute exact path="/profile">
-              <ProfilePage/>
-            </PrivateRoute>
-          </Switch>
+          <Header user={user} onLogin={handleLogin} onLogout={handleLogout} showBreakpoints={true}/>
+          <RouteContainer>
+            <Switch>
+              <Route exact path="/">
+                <HomePage/>
+              </Route>
+              <PrivateRoute exact path="/matrix">
+                <MatrixPage/>
+              </PrivateRoute>
+              <PrivateRoute exact path="/person">
+                <PersonListPage/>
+              </PrivateRoute>
+              <PrivateRoute path="/person/:id">
+                <PersonEditPage/>
+              </PrivateRoute>
+              <PrivateRoute exact path="/skill">
+                <SkillListPage/>
+              </PrivateRoute>
+              <PrivateRoute exact path="/skill/edit">
+                <SkillEditPage/>
+              </PrivateRoute>
+              <PrivateRoute path="/skill/edit/:id">
+                <SkillEditPage/>
+              </PrivateRoute>
+              <PrivateRoute exact path="/experience">
+                <ExperienceListPage/>
+              </PrivateRoute>
+              <PrivateRoute path="/experience/:id">
+                <ExperiencePage/>
+              </PrivateRoute>
+              <PrivateRoute exact path="/profile">
+                <ProfilePage/>
+              </PrivateRoute>
+              <Route>
+                <NotFoundPage/>
+              </Route>
+            </Switch>
+          </RouteContainer>
         </Router>
         <ReactQueryDevtools initialIsOpen={false}/>
       </QueryClientProvider>
     </ThemeProvider>
   );
 }
+
+const RouteContainer = styled.div`
+  margin: 16px;
+`;

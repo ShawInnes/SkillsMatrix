@@ -4,7 +4,7 @@ namespace SkillsMatrix.Api.Models
 {
     public abstract class Vertex
     {
-        public long? Id { get; set; }
+        public string Id { get; set; }
         [JsonIgnore]
         public string Company { get; set; } = "SixPivot";
         public string Name { get; set; }

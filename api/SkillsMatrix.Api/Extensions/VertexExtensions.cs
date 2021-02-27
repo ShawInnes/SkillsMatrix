@@ -9,10 +9,22 @@ namespace SkillsMatrix.Api.Extensions
 {
     public static class VertexExtensions
     {
-        public static async Task<T> TryAdd<T>(this IGremlinQuerySource querySource, T item, Expression<Func<T, bool>> query)
+        public static async Task<T> TryAddOrUpdate<T>(this IGremlinQuerySource querySource, T item, Expression<Func<T, bool>> query)
             where T : Vertex
         {
-            var newItem = await querySource.V<T>().Where(query).SingleOrDefaultAsync();
+            if (item.Id != null)
+            {
+                return await querySource
+                    .V<T>(item.Id)
+                    .ReplaceV(item)
+                    .FirstOrDefaultAsync();
+            }
+
+            var newItem = await querySource
+                .V<T>()
+                .Where(query)
+                .SingleOrDefaultAsync();
+
             if (newItem == null)
             {
                 Log.Debug("Adding new {Type} {@Item}", typeof(T).Name, item);

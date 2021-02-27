@@ -20,21 +20,23 @@ const getSkill = async (id: string) => {
 
 export const useSkillQuery = (id: string) => useQuery(['skill', id], () => getSkill(id));
 
-const addSkill = async (skill: Partial<Skill>) => {
+const updateSkill = async (skill: Partial<Skill>) => {
   const axios = await getAxiosInstance();
   const {data} = await axios.post<Skill>(`${process.env.REACT_APP_API_URL}/api/skill`, skill);
   return data;
 };
 
-export const useAddSkillMutation = () => {
+export const useSkillMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Skill, MutationError, Partial<Skill>>((newSkill) => addSkill(newSkill), {
+  return useMutation<Skill, MutationError, Partial<Skill>>((newSkill) => updateSkill(newSkill), {
       onSuccess: async (data, variables, context) => {
         const previousSkills = queryClient.getQueryData<Array<Skill>>('skills') || [];
 
-        const filteredSkills = _.uniqBy([...previousSkills, data], 'id');
-        queryClient.setQueryData<Array<Skill>>('skills', filteredSkills)
+        const filteredSkills = previousSkills.filter((skill) => skill.id !== data.id);
+        const nextSkills = [...filteredSkills, data];
+
+        queryClient.setQueryData<Array<Skill>>('skills', nextSkills);
 
         await queryClient.invalidateQueries('person-missing-skills');
       }

@@ -56,7 +56,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(Skill), 200)]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSkill(long id)
+        public async Task<IActionResult> GetSkill(string id)
         {
             var query = await _querySource
                 .V<Skill>(id)
@@ -74,7 +74,7 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreateSkill(Skill skill)
         {
             var query = await _querySource
-                .TryAdd(skill, p => p.Name == skill.Name);
+                .TryAddOrUpdate(skill, p => p.Name == skill.Name);
 
             return Ok(query);
         }
@@ -85,7 +85,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(Skill), 200)]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSkill(long id)
+        public async Task<IActionResult> DeleteSkill(string id)
         {
             var query = await _querySource
                 .V<Skill>(id)

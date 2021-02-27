@@ -1,18 +1,20 @@
-# pull official base image
-FROM node:10.15.3-alpine
+## Build Stage
+FROM node:10.15.3-alpine as build
 
-# set working directory
 WORKDIR /app
 
-# add `/app/node_modules/.bin` to $PATH
-ENV PATH /app/node_modules/.bin:$PATH
+COPY package*.json /app/
 
-# install app dependencies
-COPY package.json ./
 RUN yarn install
 
-# add app
-COPY . ./
+COPY ./ /app/
+COPY ./.env.production /app/.env
 
-# start app
-CMD ["yarn", "start"]
+RUN yarn run build
+
+## Runtime Stage
+FROM nginx:1.19.7-alpine
+
+COPY --from=build /app/build/ /usr/share/nginx/html
+COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
+

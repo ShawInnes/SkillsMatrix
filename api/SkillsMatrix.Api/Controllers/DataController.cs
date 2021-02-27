@@ -66,7 +66,7 @@ namespace SkillsMatrix.Api.Controllers
                         Name = item.Person,
                         Email = item.Person
                     };
-                    person = await _querySource.TryAdd(newPerson, p => p.Oid == item.Person);
+                    person = await _querySource.TryAddOrUpdate(newPerson, p => p.Oid == item.Person);
                     personCache.Add(item.Person, person);
                 }
 
@@ -77,7 +77,7 @@ namespace SkillsMatrix.Api.Controllers
                 }
                 else
                 {
-                    skill = await _querySource.TryAdd(new Skill {Name = item.SkillName}, p => p.Name == item.SkillName);
+                    skill = await _querySource.TryAddOrUpdate(new Skill {Name = item.SkillName}, p => p.Name == item.SkillName);
                     skillCache.Add(item.SkillName, skill);
                 }
 

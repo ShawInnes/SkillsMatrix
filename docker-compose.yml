@@ -13,11 +13,17 @@ services:
       context: ./api
       dockerfile: Dockerfile
     environment:
-      Gremlin__UseGremlinServer: "true"
-      Gremlin__Host: "ws://gremlin:8182"
-      ASPNETCORE_ENVIRONMENT: "Development"
+      # ASPNETCORE_ENVIRONMENT: "Development"
+      # Gremlin__UseGremlinServer: "true"
+      # Gremlin__Host: "ws://gremlin:8182"
+      ASPNETCORE_ENVIRONMENT: "Production"
+      GREMLIN__USEGREMLINSERVER: "false"
+      GREMLIN__HOST: ${GREMLIN_HOST}
+      GREMLIN__PRIMARYKEY: ${GREMLIN_PRIMARYKEY}
+      GREMLIN__DATABASENAME: ${GREMLIN_DATABASENAME}
+      GREMLIN__CONTAINERNAME: ${GREMLIN_CONTAINERNAME}
     ports:
-      - "5000:80"
+      - "80:80"
 
   app:
     build:

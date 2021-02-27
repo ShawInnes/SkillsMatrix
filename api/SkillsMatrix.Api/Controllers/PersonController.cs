@@ -97,7 +97,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(Person), 200)]
         [HttpGet("person/{id}")]
-        public async Task<IActionResult> GetPerson(long id)
+        public async Task<IActionResult> GetPerson(string id)
         {
             var query = await _querySource
                 .V<Person>(id)
@@ -115,7 +115,7 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreatePerson(Person person)
         {
             var query = await _querySource
-                .TryAdd(person, p => p.Name == person.Name);
+                .TryAddOrUpdate(person, p => p.Name == person.Name);
 
             return Ok(query);
         }
@@ -129,7 +129,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(PersonSkill), 200)]
         [HttpPost("person/skill")]
-        public async Task<IActionResult> AddSkill([FromQuery] long personId, [FromQuery] long skillId, [FromQuery] SkillLevel skillLevel)
+        public async Task<IActionResult> AddSkill([FromQuery] string personId, [FromQuery] string skillId, [FromQuery] SkillLevel skillLevel)
         {
             var query = await _querySource
                 .TryAdd(personId, skillId, skillLevel);
@@ -145,7 +145,7 @@ namespace SkillsMatrix.Api.Controllers
         [ProducesResponseType(typeof(ProblemDetails), 503)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         [HttpGet("person/skills/{id}")]
-        public async Task<IActionResult> GetPersonSkills(long id)
+        public async Task<IActionResult> GetPersonSkills(string id)
         {
             var query = await _querySource
                 .V<Person>(id)
@@ -166,7 +166,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(List<PersonSkill>), 200)]
         [HttpGet("person/missingskills/{id}")]
-        public async Task<IActionResult> GetMissingSkills(long id)
+        public async Task<IActionResult> GetMissingSkills(string id)
         {
             var query = await _querySource
                 .V<Skill>()
@@ -186,7 +186,7 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(PersonExperience), 200)]
         [HttpPost("person/experience")]
-        public async Task<IActionResult> AddExperience([FromQuery] long personId, [FromQuery] long experienceId, [FromQuery] ExperienceLevel experienceLevel)
+        public async Task<IActionResult> AddExperience([FromQuery] string personId, [FromQuery] string experienceId, [FromQuery] ExperienceLevel experienceLevel)
         {
             var query = await _querySource
                 .TryAdd(personId, experienceId, experienceLevel);
@@ -202,7 +202,7 @@ namespace SkillsMatrix.Api.Controllers
         [ProducesResponseType(typeof(ProblemDetails), 503)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         [HttpGet("person/experiences/{id}")]
-        public async Task<IActionResult> GetPersonExperiences(long id)
+        public async Task<IActionResult> GetPersonExperiences(string id)
         {
             var query = await _querySource
                 .V<Person>(id)

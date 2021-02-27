@@ -8,7 +8,7 @@ namespace SkillsMatrix.Api.Extensions
 {
     public static class ExperienceVertexExtensions
     {
-        public static async Task<HasExperience> TryAdd(this IGremlinQuerySource querySource, long fromPersonId, long toExperienceId, ExperienceLevel experienceLevel)
+        public static async Task<HasExperience> TryAdd(this IGremlinQuerySource querySource, string fromPersonId, string toExperienceId, ExperienceLevel experienceLevel)
         {
             var query = (await querySource
                 .V<Person>(fromPersonId)
