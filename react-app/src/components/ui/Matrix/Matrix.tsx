@@ -9,16 +9,6 @@ export interface MatrixProps {
   data: SkillRating[];
 }
 
-const StyledTable = styled(Table)`
-  &.table thead th {
-    position: sticky;
-    top: 0px;
-    background: white;
-    box-shadow: 0 1px #dee2e6, 0 -1px #dee2e6;
-    text-align: center;
-  }
-`;
-
 export const Matrix: React.FC<MatrixProps> = ({data}) => {
   const [people, setPeople] = useState<string[]>([]);
   const [skills, setSkills] = useState<string[]>([]);
@@ -27,6 +17,15 @@ export const Matrix: React.FC<MatrixProps> = ({data}) => {
     const list: any[] = _.filter(data, {'person': person, 'skillName': skillName});
     if (list.length === 1) {
       return list[0].skillLevel;
+    }
+
+    return null;
+  };
+
+  const getCategory = (skillName: string) => {
+    const list: any[] = _.filter(data, {'skillName': skillName});
+    if (list.length === 1) {
+      return list[0].skillCategory;
     }
 
     return null;
@@ -42,6 +41,7 @@ export const Matrix: React.FC<MatrixProps> = ({data}) => {
       <thead>
       <tr>
         <th>Technology</th>
+        <th>Category</th>
         {_.orderBy(people).map((person, personIndex) => {
           return (<th key={personIndex}>{person}</th>)
         })}
@@ -52,6 +52,7 @@ export const Matrix: React.FC<MatrixProps> = ({data}) => {
         return (
           <tr key={skillIndex}>
             <th>{skillName}</th>
+            <th>{getCategory(skillName)}</th>
             {_.orderBy(people).map((person, personIndex) => {
               return (<td key={personIndex} align="center"><MatrixCell skillLevel={getValue(person, skillName)}/></td>)
             })}
@@ -62,3 +63,13 @@ export const Matrix: React.FC<MatrixProps> = ({data}) => {
     </StyledTable>
   );
 }
+
+const StyledTable = styled(Table)`
+  &.table thead th {
+    position: sticky;
+    top: 0px;
+    background: white;
+    box-shadow: 0 1px #dee2e6, 0 -1px #dee2e6;
+    text-align: center;
+  }
+`;
