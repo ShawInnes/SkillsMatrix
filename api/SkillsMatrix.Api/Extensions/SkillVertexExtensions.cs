@@ -11,7 +11,7 @@ namespace SkillsMatrix.Api.Extensions
     /// </summary>
     public static class SkillVertexExtensions
     {
-        public static async Task<HasSkill> TryAdd(this IGremlinQuerySource querySource, long fromPersonId, long toSkillId, SkillLevel skillLevel)
+        public static async Task<HasSkill> TryAdd(this IGremlinQuerySource querySource, string fromPersonId, string toSkillId, SkillLevel skillLevel)
         {
             var query = (await querySource
                 .V<Person>(fromPersonId)

@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -15,21 +17,19 @@ namespace SkillsMatrix.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class SkillController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
         /// <summary>
         /// Skill Controller
         /// </summary>
-        /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public SkillController(IHttpContextAccessor httpContextAccessor, ILogger<SkillController> logger, IGremlinQuerySource querySource)
+        public SkillController(IUserIdService userId, ILogger<SkillController> logger, IGremlinQuerySource querySource)
         {
-            _httpContextAccessor = httpContextAccessor;
             _logger = logger;
             _querySource = querySource;
         }
@@ -49,13 +49,30 @@ namespace SkillsMatrix.Api.Controllers
         }
 
         /// <summary>
+        /// Get All Skill Categories
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(List<string>), 200)]
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var query = await _querySource
+                .V<Skill>()
+                .Values(p => p.Category)
+                .Dedup()
+                .ToArrayAsync();
+
+            return Ok(query.ToList());
+        }
+
+        /// <summary>
         /// Get Skill
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [ProducesResponseType(typeof(Skill), 200)]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSkill(long id)
+        public async Task<IActionResult> GetSkill(string id)
         {
             var query = await _querySource
                 .V<Skill>(id)
@@ -73,10 +90,24 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreateSkill(Skill skill)
         {
             var query = await _querySource
-                .TryAdd(skill);
+                .TryAddOrUpdate(skill, p => p.Name == skill.Name);
 
             return Ok(query);
         }
 
+        /// <summary>
+        /// Delete Skill
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(Skill), 200)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSkill(string id)
+        {
+            var query = await _querySource
+                .V<Skill>(id)
+                .Drop();
+
+            return Ok();
+        }
     }
 }

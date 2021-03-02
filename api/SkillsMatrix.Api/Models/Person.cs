@@ -6,5 +6,8 @@ namespace SkillsMatrix.Api.Models
         {
             return Name;
         }
+
+        public string Email { get; set; }
+        public string Oid { get; set; }
     }
 }

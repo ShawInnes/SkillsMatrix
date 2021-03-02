@@ -74,3 +74,17 @@ output "primary_key" {
 output "connection_strings" {
   value = azurerm_cosmosdb_account.skillsmatrix.connection_strings
 }
+
+
+# azure container registry, enable admin account
+# app service plan, linux, b1
+# linux app, docker image, skills-matrix-api
+# linux app, docker image, skills-matrix-app
+/*
+settings GREMLIN__
+  CONTAINERNAME
+  DATABASENAME
+  HOST
+  PRIMARYKEY
+  USEGREMLINSERVER = false
+*/

@@ -15,14 +15,16 @@ namespace SkillsMatrix.Api
         {
             Activity.DefaultIdFormat = ActivityIdFormat.W3C;
 
-            Log.Logger = new LoggerConfiguration()
+            var loggerConfiguration = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                .Enrich.FromLogContext()
-                .WriteTo.Console()
-                .WriteTo.Seq(serverUrl: "http://localhost:5341")
-                .CreateLogger();
+                .Enrich.FromLogContext();
+
+            loggerConfiguration = loggerConfiguration.WriteTo.Console();
+            // loggerConfiguration = loggerConfiguration.WriteTo.Seq(serverUrl: "http://localhost:5341");
+
+            Log.Logger = loggerConfiguration.CreateLogger();
 
             try
             {

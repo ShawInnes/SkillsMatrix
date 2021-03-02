@@ -2,11 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
+using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -15,9 +17,10 @@ namespace SkillsMatrix.Api.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ExperienceController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserIdService _userId;
         private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
@@ -27,9 +30,9 @@ namespace SkillsMatrix.Api.Controllers
         /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public ExperienceController(IHttpContextAccessor httpContextAccessor, ILogger<ExperienceController> logger, IGremlinQuerySource querySource)
+        public ExperienceController(IUserIdService userId, ILogger<ExperienceController> logger, IGremlinQuerySource querySource)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _userId = userId;
             _logger = logger;
             _querySource = querySource;
         }
@@ -55,13 +58,30 @@ namespace SkillsMatrix.Api.Controllers
         /// <returns></returns>
         [ProducesResponseType(typeof(Experience), 200)]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetExperience(long id)
+        public async Task<IActionResult> GetExperience(string id)
         {
             var query = await _querySource
                 .V<Experience>(id)
                 .FirstOrDefaultAsync();
 
             return Ok(query);
+        }
+
+        /// <summary>
+        /// Get All Experience Categories
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(List<string>), 200)]
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var query = await _querySource
+                .V<Experience>()
+                .Values(p => p.Category)
+                .Dedup()
+                .ToArrayAsync();
+
+            return Ok(query.ToList());
         }
 
         /// <summary>
@@ -73,7 +93,7 @@ namespace SkillsMatrix.Api.Controllers
         public async Task<IActionResult> CreateExperience(Experience experience)
         {
             var query = await _querySource
-                .TryAdd(experience);
+                .TryAddOrUpdate(experience, p => p.Name == experience.Name);
 
             return Ok(query);
         }

@@ -5,6 +5,7 @@
 - Styled Components
 - React Query
 - React Bootstrap
+- React Bootstrap Typeahead
 - Font Awesome
 - Formik
 - Axios

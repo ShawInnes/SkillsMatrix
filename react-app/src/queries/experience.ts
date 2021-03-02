@@ -1,15 +1,25 @@
-import axios from "axios";
 import {useQuery} from "react-query";
 import {Experience} from "models";
+import {getAxiosInstance} from "../infrastructure/axios";
 
 const getExperiences = async () => {
+  const axios = await getAxiosInstance();
   const {data} = await axios.get<Array<Experience>>(`${process.env.REACT_APP_API_URL}/api/experience`);
   return data.map((o: Experience) => o);
 };
 
 export const useExperiencesQuery = () => useQuery<any, any, Array<Experience>>(['experiences'], () => getExperiences());
 
+const getExperienceCategories = async () => {
+  const axios = await getAxiosInstance();
+  const {data} = await axios.get<Array<string>>(`${process.env.REACT_APP_API_URL}/api/experience/categories`);
+  return data.map((o: string) => o);
+};
+
+export const useExperienceCategoriesQuery = () => useQuery(['experience-categories'], () => getExperienceCategories());
+
 const getExperience = async (id: string) => {
+  const axios = await getAxiosInstance();
   const {data} = await axios.get<Experience>(`${process.env.REACT_APP_API_URL}/api/experience/${id}`);
   return data;
 };

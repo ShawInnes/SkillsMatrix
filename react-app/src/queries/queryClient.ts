@@ -4,7 +4,7 @@ export default new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      staleTime: 5000,
+      staleTime: Number(process.env.REACT_APP_QUERY_CACHE_TIME),
     }
   }
 });
