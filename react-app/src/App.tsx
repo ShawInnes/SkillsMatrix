@@ -11,7 +11,7 @@ import {ReactQueryDevtools} from "react-query/devtools";
 import queryClient from "queries/queryClient";
 import {lightTheme} from "./themes";
 import styled, {ThemeProvider} from "styled-components";
-import {Header} from "./components";
+import {Header} from "./components/ui";
 import {
   ExperienceListPage,
   ExperiencePage,
@@ -39,7 +39,6 @@ export const App: FC = () => {
   useEffect(() => {
     (async function getIdentity() {
       const identity = await authService.getIdentity();
-      const profile = await authService.getProfile();
 
       if (setUser) {
         setUser({
@@ -55,7 +54,6 @@ export const App: FC = () => {
   // Log in with new response token
   const handleLogin = async () => {
     const identity = await authService.signIn();
-    const profile = await authService.getProfile();
 
     if (setUser) {
       setUser({
@@ -74,7 +72,7 @@ export const App: FC = () => {
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
         <Router history={browserHistory}>
-          <Header user={user} onLogin={handleLogin} onLogout={handleLogout} showBreakpoints={true}/>
+          <Header user={user} onLogin={handleLogin} onLogout={handleLogout} showBreakpoints={false}/>
           <RouteContainer>
             <Switch>
               <Route exact path="/">

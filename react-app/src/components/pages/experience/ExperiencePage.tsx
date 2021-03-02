@@ -1,9 +1,9 @@
 import React from "react";
 import {FC} from "react";
-import {Container, Table} from "react-bootstrap";
-import {Link, useParams} from "react-router-dom";
+import {Table} from "react-bootstrap";
+import {useParams} from "react-router-dom";
 import {useExperienceQuery} from "queries";
-import {LoadingOverlay} from "../../index";
+import {LoadingOverlay} from "../../ui";
 
 type RouteParams = {
   id: string

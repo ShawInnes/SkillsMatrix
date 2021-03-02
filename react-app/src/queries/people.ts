@@ -1,7 +1,6 @@
 import {useMutation, useQuery, useQueryClient} from "react-query";
-import {Person, Skill, SkillLevel, SkillRating} from "models";
+import {Person, SkillLevel, SkillRating} from "models";
 import {getAxiosInstance} from "../infrastructure/axios";
-import {MutationError} from "./mutationError";
 
 const getPeople = async () => {
   const axios = await getAxiosInstance();

@@ -14,9 +14,10 @@ namespace SkillsMatrix.Api.Extensions
         {
             if (item.Id != null)
             {
+                item.Company = null;
                 return await querySource
                     .V<T>(item.Id)
-                    .ReplaceV(item)
+                    .Update(item)
                     .FirstOrDefaultAsync();
             }
 

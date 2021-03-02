@@ -8,7 +8,7 @@ import {
 import {Identity} from "./Identity";
 import {InteractiveSignInRequired} from "./InteractiveSignInRequired";
 import {getAxiosInstance} from "../axios";
-import {Experience, Person} from "../../models";
+import {Person} from "../../models";
 
 export class AuthService {
   msalConfig: Configuration;

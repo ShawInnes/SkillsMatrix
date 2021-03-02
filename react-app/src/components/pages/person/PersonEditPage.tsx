@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {FC} from "react";
-import {Alert, Container, Table} from "react-bootstrap";
+import {Alert, Table} from "react-bootstrap";
 import {useParams} from "react-router-dom";
 import {
   PersonSkillMutation,
@@ -9,9 +9,8 @@ import {
   usePersonMissingSkillsQuery,
   usePersonSkillsQuery
 } from "queries";
-import {LoadingOverlay, Rating} from "components/index";
+import {LoadingOverlay, Rating} from "components/ui";
 import {SkillLevel} from "models";
-import {Form} from "react-bootstrap-formik";
 
 type RouteParams = {
   id: string

@@ -5,8 +5,8 @@ module.exports = {
   ],
   "addons": [
     "@storybook/addon-links",
-    "@storybook/addon-controls",
     "@storybook/addon-essentials",
+    "@storybook/addon-controls",
     "@storybook/preset-create-react-app",
     "storybook-addon-styled-component-theme/dist/register"
   ]

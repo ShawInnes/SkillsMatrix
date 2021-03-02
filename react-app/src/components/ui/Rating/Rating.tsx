@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
 import {RatingButton} from "./RatingButton";
 import {SkillLevel} from "models";
-import {Container} from "react-bootstrap";
 import styled from "styled-components";
 
 export type RatingProps = {

@@ -1,9 +1,9 @@
 import React from "react";
 import {FC} from "react";
-import {Container, Table} from "react-bootstrap";
+import {Table} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import {useExperiencesQuery} from "queries";
-import {LoadingOverlay} from "../../index";
+import {LoadingOverlay} from "../../ui";
 
 export const ExperienceListPage: FC = () => {
   const {data, isLoading} = useExperiencesQuery();
