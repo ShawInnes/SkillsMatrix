@@ -26,7 +26,6 @@ namespace SkillsMatrix.Api.Controllers
         /// <summary>
         /// Skill Controller
         /// </summary>
-        /// <param name="httpContextAccessor"></param>
         /// <param name="logger"></param>
         /// <param name="querySource"></param>
         public SkillController(IUserIdService userId, ILogger<SkillController> logger, IGremlinQuerySource querySource)
@@ -46,6 +45,23 @@ namespace SkillsMatrix.Api.Controllers
             var query = await _querySource
                 .V<Skill>()
                 .ToArrayAsync();
+            return Ok(query.ToList());
+        }
+
+        /// <summary>
+        /// Get All Skill Categories
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(List<string>), 200)]
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var query = await _querySource
+                .V<Skill>()
+                .Values(p => p.Category)
+                .Dedup()
+                .ToArrayAsync();
+
             return Ok(query.ToList());
         }
 

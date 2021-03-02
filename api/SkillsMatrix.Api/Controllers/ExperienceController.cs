@@ -68,6 +68,23 @@ namespace SkillsMatrix.Api.Controllers
         }
 
         /// <summary>
+        /// Get All Experience Categories
+        /// </summary>
+        /// <returns></returns>
+        [ProducesResponseType(typeof(List<string>), 200)]
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var query = await _querySource
+                .V<Experience>()
+                .Values(p => p.Category)
+                .Dedup()
+                .ToArrayAsync();
+
+            return Ok(query.ToList());
+        }
+
+        /// <summary>
         /// Create Experience
         /// </summary>
         /// <returns></returns>

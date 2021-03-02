@@ -6,5 +6,7 @@ namespace SkillsMatrix.Api.Models
         {
             return Name;
         }
+
+        public string Category { get; set; }
     }
 }

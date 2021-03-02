@@ -2,7 +2,6 @@ import {useMutation, useQuery, useQueryClient} from "react-query";
 import {Skill} from "models";
 import {getAxiosInstance} from "infrastructure/axios";
 import {MutationError} from "./mutationError";
-import _ from "lodash";
 
 const getSkills = async () => {
   const axios = await getAxiosInstance();
@@ -11,6 +10,14 @@ const getSkills = async () => {
 };
 
 export const useSkillsQuery = () => useQuery(['skills'], () => getSkills());
+
+const getSkillCategories = async () => {
+  const axios = await getAxiosInstance();
+  const {data} = await axios.get<Array<string>>(`${process.env.REACT_APP_API_URL}/api/skill/categories`);
+  return data.map((o: string) => o);
+};
+
+export const useSkillCategoriesQuery = () => useQuery(['skill-categories'], () => getSkillCategories());
 
 const getSkill = async (id: string) => {
   const axios = await getAxiosInstance();
