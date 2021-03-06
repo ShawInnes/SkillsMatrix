@@ -1,16 +1,16 @@
 import React from 'react';
 import {Story, Meta} from '@storybook/react/types-6-0';
-import {Header, HeaderProps} from './Header';
+import {Footer, FooterProps} from './Footer';
 import {MemoryRouter as Router} from 'react-router-dom';
 import {UserContext, UserContextModel} from 'infrastructure/context';
 
 export default {
   title: 'Components/Footer',
-  component: Header
+  component: Footer
 } as Meta;
 
 
-const Template: Story<HeaderProps> = (args) => (<Header {...args} />);
+const Template: Story<FooterProps> = (args) => (<Footer {...args} />);
 
 const loggedInContext: UserContextModel = {
 };

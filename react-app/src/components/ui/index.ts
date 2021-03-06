@@ -1,4 +1,5 @@
 export * from "./Header/Header";
+export * from "./Footer/Footer";
 export * from "./LoadingOverlay/LoadingOverlay";
 export * from "./Matrix/Matrix";
 export * from "./MatrixCell/MatrixCell";
