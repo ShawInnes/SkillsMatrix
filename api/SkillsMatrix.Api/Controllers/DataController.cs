@@ -44,6 +44,8 @@ namespace SkillsMatrix.Api.Controllers
             var importData = Core.IO.Import(inputString);
             var personCache = new Dictionary<string, Person>();
             var skillCache = new Dictionary<string, Skill>();
+            var experienceCache = new Dictionary<string, Experience>();
+
             foreach (var item in importData)
             {
                 Person person;
@@ -63,24 +65,48 @@ namespace SkillsMatrix.Api.Controllers
                     personCache.Add(item.PersonId, person);
                 }
 
-                Skill skill;
-                if (skillCache.ContainsKey(item.SkillName))
+                if (item.SkillCategory.Contains("Experience"))
                 {
-                    skill = skillCache[item.SkillName];
+                    Experience experience;
+                    if (experienceCache.ContainsKey(item.SkillName))
+                    {
+                        experience = experienceCache[item.SkillName];
+                    }
+                    else
+                    {
+                        var newExperience = new Experience
+                        {
+                            Name = item.SkillName,
+                            Category = item.SkillCategory
+                        };
+                        experience = await _querySource.TryAddOrUpdate(newExperience, p => p.Name == item.SkillName);
+                        experienceCache.Add(item.SkillName, experience);
+                    }
+
+                    if (item.SkillLevel != null)
+                        await _querySource.TryAdd(person, experience, new HasExperience {Level = (ExperienceLevel) item.SkillLevel});
                 }
                 else
                 {
-                    var newSkill = new Skill
+                    Skill skill;
+                    if (skillCache.ContainsKey(item.SkillName))
                     {
-                        Name = item.SkillName,
-                        Category = item.SkillCategory
-                    };
-                    skill = await _querySource.TryAddOrUpdate(newSkill, p => p.Name == item.SkillName);
-                    skillCache.Add(item.SkillName, skill);
-                }
+                        skill = skillCache[item.SkillName];
+                    }
+                    else
+                    {
+                        var newSkill = new Skill
+                        {
+                            Name = item.SkillName,
+                            Category = item.SkillCategory
+                        };
+                        skill = await _querySource.TryAddOrUpdate(newSkill, p => p.Name == item.SkillName);
+                        skillCache.Add(item.SkillName, skill);
+                    }
 
-                if (item.SkillLevel != null)
-                    await _querySource.TryAdd(person, skill, new HasSkill {Level = (SkillLevel) item.SkillLevel});
+                    if (item.SkillLevel != null)
+                        await _querySource.TryAdd(person, skill, new HasSkill {Level = (SkillLevel) item.SkillLevel});
+                }
             }
 
             return Ok();

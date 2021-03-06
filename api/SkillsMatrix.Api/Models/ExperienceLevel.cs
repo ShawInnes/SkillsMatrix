@@ -7,10 +7,16 @@ namespace SkillsMatrix.Api.Models
         [Description("not interested")]
         NotInterested = 1,
 
-        [Description("have experience")]
-        Proficient = 2,
+        [Description("will learn")]
+        WillLearn = 2,
 
-        [Description("expert")]
-        Expert = 3
+        [Description("exposure but not proficient")]
+        LimitedExposure = 3,
+
+        [Description("proficient")]
+        Proficient = 4,
+
+        [Description("expert (can coach)")]
+        Expert = 5
     }
 }
