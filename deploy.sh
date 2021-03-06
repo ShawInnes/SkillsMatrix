@@ -7,7 +7,9 @@ HASH=`git rev-parse --short HEAD`
 
 docker-compose build api
 docker tag skillsmatrix_api skillsmatrixacr.azurecr.io/skillsmatrix_api:latest
+docker tag skillsmatrix_api skillsmatrixacr.azurecr.io/skillsmatrix_api:$HASH
 docker push skillsmatrixacr.azurecr.io/skillsmatrix_api:latest
+docker push skillsmatrixacr.azurecr.io/skillsmatrix_api:$HASH
 
 docker-compose build app
 docker tag skillsmatrix_app skillsmatrixacr.azurecr.io/skillsmatrix_app
