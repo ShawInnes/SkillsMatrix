@@ -39,6 +39,7 @@ resource "azurerm_app_service" "skillsmatrix" {
     "GREMLIN__DATABASENAME"     = var.gremlin_databasename  # azurerm_cosmosdb_gremlin_database.skillsmatrix.name
     "GREMLIN__CONTAINERNAME"    = var.gremlin_containername # azurerm_cosmosdb_gremlin_graph.skillsmatrix.name
     "PROJECT"                   = "api/SkillsMatrix.Api/SkillsMatrix.Api.csproj"
+    "DEPLOYMENT_BRANCH"         = "main"
   }
 }
 
