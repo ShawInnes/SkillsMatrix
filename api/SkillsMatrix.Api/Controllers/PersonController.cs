@@ -3,14 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
 using SkillsMatrix.Api.Services;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -20,13 +17,11 @@ namespace SkillsMatrix.Api.Controllers
     public class PersonController : ControllerBase
     {
         private readonly IUserIdService _userId;
-        private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
-        public PersonController(IUserIdService userId, ILogger<PersonController> logger, IGremlinQuerySource querySource)
+        public PersonController(IUserIdService userId, IGremlinQuerySource querySource)
         {
             _userId = userId;
-            _logger = logger;
             _querySource = querySource;
         }
 
@@ -65,7 +60,7 @@ namespace SkillsMatrix.Api.Controllers
             {
                 Log.Information("Adding New Person");
                 var newPerson = await _querySource
-                    .AddV<Person>(new Person
+                    .AddV(new Person
                     {
                         Oid = objectId,
                         Email = emailAddress,

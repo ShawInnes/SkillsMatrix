@@ -22,21 +22,21 @@ namespace SkillsMatrix.Api.Extensions
                     .Dedup()
                 )).SingleOrDefault();
 
-            return await TryAdd<Person, Skill>(querySource, query.Item1, query.Item2, new HasSkill {Level = skillLevel});
+            return await TryAdd(querySource, query.Item1, query.Item2, new HasSkill {Level = skillLevel});
         }
 
-        public static async Task<HasSkill> TryAdd<U, V>(this IGremlinQuerySource querySource, U fromVertex, V toVertex, HasSkill edge)
-            where U : Vertex
-            where V : Vertex
+        public static async Task<HasSkill> TryAdd<TU, TV>(this IGremlinQuerySource querySource, TU fromVertex, TV toVertex, HasSkill edge)
+            where TU : Vertex
+            where TV : Vertex
         {
             var newEdge = (await querySource
-                .V<U>(fromVertex.Id!)
-                .As((a, fromLabel) => a
+                .V<TU>(fromVertex.Id!)
+                .As((a, _) => a
                     .OutE<HasSkill>()
                     .As((b, edgeLabel) => b
-                        .InV<V>()
+                        .InV<TV>()
                         .Where(p => p.Id == toVertex.Id!)
-                        .As((c, toLabel) => c.Select(edgeLabel)))
+                        .As((c, _) => c.Select(edgeLabel)))
                 )).FirstOrDefault();
 
             if (newEdge == null)

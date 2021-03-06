@@ -24,4 +24,9 @@
       <ProjectReference Include="..\SkillsMatrix.Core\SkillsMatrix.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Data\V2.tsv" />
+      <EmbeddedResource Include="Data\V2.tsv" />
+    </ItemGroup>
+
 </Project>

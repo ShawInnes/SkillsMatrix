@@ -3,12 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
-using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -20,17 +17,14 @@ namespace SkillsMatrix.Api.Controllers
     [Authorize]
     public class SkillController : ControllerBase
     {
-        private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
         /// <summary>
         /// Skill Controller
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="querySource"></param>
-        public SkillController(IUserIdService userId, ILogger<SkillController> logger, IGremlinQuerySource querySource)
+        public SkillController(IGremlinQuerySource querySource)
         {
-            _logger = logger;
             _querySource = querySource;
         }
 
@@ -103,7 +97,7 @@ namespace SkillsMatrix.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSkill(string id)
         {
-            var query = await _querySource
+            await _querySource
                 .V<Skill>(id)
                 .Drop();
 

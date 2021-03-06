@@ -3,13 +3,10 @@ using System.IO;
 using System.Threading.Tasks;
 using ExRam.Gremlinq.Core;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using SkillsMatrix.Api.Extensions;
 using SkillsMatrix.Api.Models;
-using SkillsMatrix.Api.Services;
 
 namespace SkillsMatrix.Api.Controllers
 {
@@ -21,21 +18,17 @@ namespace SkillsMatrix.Api.Controllers
     [Authorize]
     public class DataController : ControllerBase
     {
-        private readonly IUserIdService _userId;
         private readonly IHostEnvironment _env;
-        private readonly ILogger _logger;
         private readonly IGremlinQuerySource _querySource;
 
         /// <summary>
         /// Data Controller
         /// </summary>
-        /// <param name="logger"></param>
+        /// <param name="env"></param>
         /// <param name="querySource"></param>
-        public DataController(IUserIdService userId, IHostEnvironment env, ILogger<DataController> logger, IGremlinQuerySource querySource)
+        public DataController(IHostEnvironment env, IGremlinQuerySource querySource)
         {
-            _userId = userId;
             _env = env;
-            _logger = logger;
             _querySource = querySource;
         }
 
@@ -47,27 +40,27 @@ namespace SkillsMatrix.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> CreateData()
         {
-            var inputString = await System.IO.File.ReadAllTextAsync(Path.Combine(_env.ContentRootPath, "Data/SampleData.tsv"));
+            var inputString = await System.IO.File.ReadAllTextAsync(Path.Combine(_env.ContentRootPath, "Data/V2.tsv"));
             var importData = Core.IO.Import(inputString);
             var personCache = new Dictionary<string, Person>();
             var skillCache = new Dictionary<string, Skill>();
             foreach (var item in importData)
             {
                 Person person;
-                if (personCache.ContainsKey(item.Person))
+                if (personCache.ContainsKey(item.PersonId))
                 {
-                    person = personCache[item.Person];
+                    person = personCache[item.PersonId];
                 }
                 else
                 {
                     var newPerson = new Person
                     {
-                        Oid = item.Person,
-                        Name = item.Person,
-                        Email = item.Person
+                        Oid = item.PersonId,
+                        Name = item.PersonName,
                     };
-                    person = await _querySource.TryAddOrUpdate(newPerson, p => p.Oid == item.Person);
-                    personCache.Add(item.Person, person);
+
+                    person = await _querySource.TryAddOrUpdate(newPerson, p => p.Oid == item.PersonId);
+                    personCache.Add(item.PersonId, person);
                 }
 
                 Skill skill;
@@ -77,7 +70,12 @@ namespace SkillsMatrix.Api.Controllers
                 }
                 else
                 {
-                    skill = await _querySource.TryAddOrUpdate(new Skill {Name = item.SkillName}, p => p.Name == item.SkillName);
+                    var newSkill = new Skill
+                    {
+                        Name = item.SkillName,
+                        Category = item.SkillCategory
+                    };
+                    skill = await _querySource.TryAddOrUpdate(newSkill, p => p.Name == item.SkillName);
                     skillCache.Add(item.SkillName, skill);
                 }
 

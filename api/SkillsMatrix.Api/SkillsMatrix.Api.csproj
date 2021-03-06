@@ -36,9 +36,6 @@
 
     <ItemGroup>
       <None Remove="Data\SampleData.tsv" />
-      <Content Include="Data\SampleData.tsv">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ namespace SkillsMatrix.Api.Models
 
         public override string ToString()
         {
-            return Id.ToString();
+            return Id;
         }
     }
 }
